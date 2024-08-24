@@ -5,9 +5,9 @@ const Home = () => {
   const { directory } = useDcryptContext();
 
   return directory === null ? (
-    <Navigate to={"/get-started"} />
+    <Navigate to={"get-started"} />
   ) : (
-    <Navigate to={"/login"} />
+    <Navigate to={"login"} />
   );
 };
 
