@@ -22,13 +22,14 @@ const SignupForm = () => {
       setError("Passwords don't match");
       setSignupPassword("");
       setConfirmPassword("");
+      return;
     }
 
     await window.electron.storePassword(signupPassword);
     setSignupPassword("");
     setConfirmPassword("");
     setError(null);
-    navigate("dashboard");
+    navigate("/dashboard");
   };
 
   return (
@@ -36,33 +37,39 @@ const SignupForm = () => {
       onSubmit={handleSubmit}
       className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4"
     >
-      <label htmlFor="signupPassword" className="mb-2 text-gray-700">
-        Enter a strong master password:
-      </label>
-      <input
-        id="signupPassword"
-        type="password"
-        placeholder="********"
-        className="mb-4 w-64 p-2 border border-gray-300 rounded"
-        onChange={(e) => setSignupPassword(e.target.value)}
-        value={signupPassword}
-      />
+      <div className="mb-2">
+        <label htmlFor="signupPassword" className="text-gray-700">
+          Enter a strong master password:{" "}
+        </label>
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="********"
+          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
+          onChange={(e) => setSignupPassword(e.target.value)}
+          value={signupPassword}
+        />
+      </div>
 
-      <label htmlFor="confirmPassword" className="mb-2 text-gray-700">
-        Re-enter the master password:
-      </label>
-      <input
-        id="confirmPassword"
-        type="password"
-        placeholder="********"
-        className="mb-4 w-64 p-2 border border-gray-300 rounded"
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        value={confirmPassword}
-      />
+      <div className="mb-2">
+        <label htmlFor="confirmPassword" className="text-gray-700">
+          Re-enter the master password:{" "}
+        </label>
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="********"
+          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmPassword}
+        />
+      </div>
 
-      {error && <ErrorBox message={error} />}
+      <div className="mb-2">
+        {error !== null && <ErrorBox message={error} />}
+      </div>
 
-      <div className="mt-4">
+      <div className="mb-2">
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

@@ -1,5 +1,5 @@
 {
-  "watch": ["./main.js", "./preload.js"],
+  "watch": ["./main.js", "./preload.js", "./vaultUtils.js"],
   "ext": "js",
   "exec": "electron ."
 }

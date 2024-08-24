@@ -8,7 +8,7 @@ const GetStarted = lazy(() => import("./pages/GetStarted"));
 const Login = lazy(() => import("./pages/Login"));
 const Logout = lazy(() => import("./pages/Logout"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Home = lazy(() => import("./pages/Home"));
+const Root = lazy(() => import("./pages/Root"));
 
 const router = createHashRouter([
   {
@@ -16,11 +16,11 @@ const router = createHashRouter([
     element: <Layout />,
     errorElement: <Error message={"Page Not Found"} />,
     children: [
-      { index: true, element: <Home /> },
-      { path: "get-started", element: <GetStarted /> },
-      { path: "login", element: <Login /> },
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "logout", element: <Logout /> },
+      { index: true, element: <Root /> },
+      { path: "/get-started", element: <GetStarted /> },
+      { path: "/login", element: <Login /> },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/logout", element: <Logout /> },
     ],
   },
 ]);
