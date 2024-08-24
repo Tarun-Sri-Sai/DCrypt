@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 
 const DIRECTORY_KEY = "dcryptDirectory";
-const DcryptContext = createContext();
 
+const DcryptContext = createContext();
 export const useDcryptContext = () => useContext(DcryptContext);
 
 export const DcryptProvider = ({ children }) => {
