@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useDcryptContext } from "../contexts/DcryptContext";
-import VaultForm from "../components/VaultForm";
-import Button from "../components/Button";
+import DashboardHeader from "../components/DashboardHeader";
+import DashboardView from "../components/DashboardView";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -32,18 +32,8 @@ const Dashboard = () => {
             <Navigate to="/signup" />
           ) : (
             <>
-              <div className="flex flex-row items-center justify-between p-2">
-                <h1 className="text-2xl font-bold">Welcome!</h1>
-                <Button
-                  type="button"
-                  onClick={() => navigate("/logout")}
-                  message={"Logout"}
-                  color={"blue"}
-                  text={"white"}
-                />
-              </div>
-              <div>{JSON.stringify(vault)}</div>
-              <VaultForm />
+              <DashboardHeader />
+              <DashboardView />
             </>
           )}
         </>

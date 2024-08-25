@@ -5,7 +5,7 @@ const fs = require("fs");
 const { decryptData, encryptData } = require("./vaultUtils");
 
 const IS_DEV = { production: false, development: true }[process.env.NODE_ENV];
-const VAULT_FILE = "dcryptVault.aes";
+const VAULT_FILE = ".dcryptVault";
 
 const sessionData = {
   masterPasswordHash: null,
