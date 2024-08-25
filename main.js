@@ -12,8 +12,10 @@ const sessionData = {
   attemptedCloseOnce: false,
 };
 
+let mainWindow;
+
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -45,7 +47,9 @@ ipcMain.handle("select-directory", async (_) => {
     properties: ["openDirectory"],
   });
 
-  if (result.cancelled) return null;
+  if (result.canceled) {
+    return null;
+  }
   return result.filePaths[0];
 });
 
@@ -104,3 +108,17 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (!mainWindow) {
+      return;
+    }
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+    mainWindow.focus();
+  });
+}
