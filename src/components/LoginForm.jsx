@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import { useNavigate } from "react-router-dom";
 import ErrorBox from "./ErrorBox";
+import Input from "./Input";
+import Button from "./Button";
 
 const LoginForm = () => {
   const [password, setPassword] = useState("");
@@ -31,14 +33,12 @@ const LoginForm = () => {
       className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4"
     >
       <div className="mb-2">
-        <label htmlFor="password" className="text-gray-700">
-          Enter the master password:{" "}
-        </label>
-        <input
+        <Input
+          borderColor={"black"}
           id="password"
+          label={"Enter the master password"}
           type="password"
           placeholder="********"
-          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
@@ -49,12 +49,12 @@ const LoginForm = () => {
       </div>
 
       <div className="mb-2">
-        <button
+        <Button
+          message={"Go to vault"}
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Go to vault
-        </button>
+          color={"blue"}
+          text={"white"}
+        />
       </div>
     </form>
   );

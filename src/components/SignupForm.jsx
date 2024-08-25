@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ErrorBox from "./ErrorBox";
 import { useNavigate } from "react-router-dom";
+import Input from "./Input";
+import Button from "./Button";
 
 const SignupForm = () => {
   const [signupPassword, setSignupPassword] = useState("");
@@ -38,30 +40,26 @@ const SignupForm = () => {
       className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4"
     >
       <div className="mb-2">
-        <label htmlFor="signupPassword" className="text-gray-700">
-          Enter a strong master password:{" "}
-        </label>
-        <input
-          id="signupPassword"
+        <Input
+          label={"Enter a strong master password"}
+          id={"signupPassword"}
           type="password"
           placeholder="********"
-          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
           onChange={(e) => setSignupPassword(e.target.value)}
           value={signupPassword}
+          borderColor={"black"}
         />
       </div>
 
       <div className="mb-2">
-        <label htmlFor="confirmPassword" className="text-gray-700">
-          Re-enter the master password:{" "}
-        </label>
-        <input
-          id="confirmPassword"
+        <Input
+          label={"Re-enter the master password"}
+          id={"confirmPassword"}
           type="password"
           placeholder="********"
-          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmPassword}
+          borderColor={"black"}
         />
       </div>
 
@@ -70,12 +68,12 @@ const SignupForm = () => {
       </div>
 
       <div className="mb-2">
-        <button
+        <Button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Go to vault
-        </button>
+          message={"Create vault"}
+          color={"blue"}
+          text={"white"}
+        />
       </div>
     </form>
   );

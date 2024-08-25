@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import ErrorBox from "./ErrorBox";
+import Input from "./Input";
+import Button from "./Button";
 
 const VaultForm = () => {
   const { updateVault, clearVault } = useDcryptContext();
@@ -26,16 +28,14 @@ const VaultForm = () => {
       className="flex flex-col items-center justify-center bg-gray-50 p-4"
     >
       <div className="mb-2">
-        <label htmlFor="vault" className="text-gray-700">
-          Enter new vault:{" "}
-        </label>
-        <input
-          id="vault"
+        <Input
+          label={"Enter new vault"}
+          id={"vault"}
           type="text"
           placeholder='{"username": "password"}'
-          className="w-64 p-2 border border-gray-300 rounded focus:border-blue-600"
           onChange={(e) => setNewVault(e.target.value)}
           value={newVault}
+          borderColor={"black"}
         />
       </div>
 
@@ -44,22 +44,22 @@ const VaultForm = () => {
       </div>
 
       <div className="mb-2 flex flex-row gap-4 items-center">
-        <button
+        <Button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Update vault
-        </button>
-        <button
+          color={"blue"}
+          message={"Update vault"}
+          text={"white"}
+        />
+        <Button
           type="button"
-          className="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600"
+          message={"Clear vault"}
           onClick={() => {
             clearVault();
             setError(null);
           }}
-        >
-          Clear vault
-        </button>
+          color={"orange"}
+          text={"white"}
+        />
       </div>
     </form>
   );
