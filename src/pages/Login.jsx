@@ -3,37 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "../components/Loader";
 import LoginForm from "../components/LoginForm";
-import SignupForm from "../components/SignupForm";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { directory } = useDcryptContext();
   const navigate = useNavigate();
-  const [vaultExists, setVaultExists] = useState(false);
 
   useEffect(() => {
-    const checkDirectory = async () => {
+    const checkDirectoryAndVault = async () => {
       if (directory === null) {
-        navigate("/");
+        navigate("/vault-location");
       }
-    };
 
-    const checkVault = async () => {
       const result = await window.electron.checkVault(directory);
-      setVaultExists(result);
+      if (!result) {
+        navigate("/signup");
+      }
+
+      setIsLoading(false);
     };
 
-    checkDirectory();
-    checkVault();
-    setIsLoading(false);
+    checkDirectoryAndVault();
   }, []);
 
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking directory. Please wait"} />
+        <Loader message={"Checking whether vault exists. Please wait"} />
       ) : (
-        <>{vaultExists ? <LoginForm /> : <SignupForm />}</>
+        <LoginForm />
       )}
     </>
   );

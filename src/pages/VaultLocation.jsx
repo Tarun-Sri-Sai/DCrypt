@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "../components/Loader";
-import SignupForm from "../components/SignupForm";
+import { Navigate } from "react-router-dom";
 
-const GetStarted = () => {
+const VaultLocation = () => {
   const { updateDirectory } = useDcryptContext();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,10 +27,10 @@ const GetStarted = () => {
           }
         />
       ) : (
-        <SignupForm />
+        <Navigate to="/signup" />
       )}
     </>
   );
 };
 
-export default GetStarted;
+export default VaultLocation;

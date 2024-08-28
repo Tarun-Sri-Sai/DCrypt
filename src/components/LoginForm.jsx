@@ -34,7 +34,6 @@ const LoginForm = () => {
     >
       <div className="mb-2">
         <Input
-          borderColor={"black"}
           id="password"
           label={"Enter the master password"}
           type="password"
@@ -49,12 +48,7 @@ const LoginForm = () => {
       </div>
 
       <div className="mb-2">
-        <Button
-          message={"Go to vault"}
-          type="submit"
-          color={"blue"}
-          text={"white"}
-        />
+        <Button type="submit">Go to vault</Button>
       </div>
     </form>
   );

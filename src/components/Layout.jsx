@@ -1,12 +1,19 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { DcryptProvider } from "../contexts/DcryptContext";
+import { useDcryptContext } from "../contexts/DcryptContext";
+import Loader from "./Loader";
 
 const Layout = () => {
+  const { isExiting } = useDcryptContext();
+
   return (
-    <DcryptProvider>
-      <Outlet />
-    </DcryptProvider>
+    <>
+      {isExiting ? (
+        <Loader message={"Encrypting your vault..."} />
+      ) : (
+        <Outlet />
+      )}
+    </>
   );
 };
 

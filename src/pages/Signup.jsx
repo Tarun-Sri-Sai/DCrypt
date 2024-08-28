@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import ErrorBox from "./ErrorBox";
+import ErrorBox from "../components/ErrorBox";
 import { useNavigate } from "react-router-dom";
-import Input from "./Input";
-import Button from "./Button";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
-const SignupForm = () => {
+const Signup = () => {
   const [signupPassword, setSignupPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
@@ -47,7 +47,6 @@ const SignupForm = () => {
           placeholder="********"
           onChange={(e) => setSignupPassword(e.target.value)}
           value={signupPassword}
-          borderColor={"black"}
         />
       </div>
 
@@ -59,7 +58,6 @@ const SignupForm = () => {
           placeholder="********"
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmPassword}
-          borderColor={"black"}
         />
       </div>
 
@@ -68,15 +66,10 @@ const SignupForm = () => {
       </div>
 
       <div className="mb-2">
-        <Button
-          type="submit"
-          message={"Create vault"}
-          color={"blue"}
-          text={"white"}
-        />
+        <Button type="submit">Create vault</Button>
       </div>
     </form>
   );
 };
 
-export default SignupForm;
+export default Signup;

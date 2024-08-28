@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Input = ({ borderColor = "blue", id, label, ...inputProps }) => {
+const Input = ({ id, label, ...inputProps }) => {
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
   return (
     <div className="flex flex-col">
-      <label htmlFor={id} className="text-gray-700 text-sm">
+      <label
+        htmlFor={id}
+        className={`text-sm ${
+          isInputFocused ? "text-blue-600" : "text-blue-500"
+        }`}
+      >
         {label}
       </label>
       <input
-        className={`w-64 py-1 px-2 border rounded border-${borderColor}`}
+        onFocus={() => setIsInputFocused(true)}
+        onBlur={() => setIsInputFocused(false)}
+        className={
+          "w-64 py-1 px-2 border rounded border-blue-500 focus:border-blue-600 focus:outline-none"
+        }
         id={id}
         {...inputProps}
       />

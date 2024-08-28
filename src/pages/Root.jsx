@@ -6,7 +6,7 @@ const Root = () => {
   const { directory } = useDcryptContext();
 
   return directory === null ? (
-    <Navigate to={"/get-started"} />
+    <Navigate to={"/vault-location"} />
   ) : (
     <Navigate to={"/login"} />
   );

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useDcryptContext } from "../contexts/DcryptContext";
-import DashboardHeader from "../components/DashboardHeader";
 import DashboardView from "../components/DashboardView";
 
 const Dashboard = () => {
@@ -16,23 +15,23 @@ const Dashboard = () => {
       if (directory === null || password === null) {
         navigate("/");
       }
+
+      setIsLoading(false);
     };
 
     checkDirectoryAndPassword();
-    setIsLoading(false);
   }, []);
 
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking directory and password. Please wait"} />
+        <Loader message={"Checking password. Please wait"} />
       ) : (
         <>
           {vault === null ? (
             <Navigate to="/signup" />
           ) : (
             <>
-              <DashboardHeader />
               <DashboardView />
             </>
           )}
