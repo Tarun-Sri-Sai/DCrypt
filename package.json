@@ -2,7 +2,7 @@
   "name": "dcrypt",
   "version": "0.1.0",
   "private": true,
-  "main": "main.js",
+  "main": "app/main.js",
   "homepage": ".",
   "dependencies": {
     "bcrypt": "^5.1.1",
