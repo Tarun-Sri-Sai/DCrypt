@@ -1,0 +1,132 @@
+import React, { useState, useRef, useEffect } from "react";
+import { fontSizes } from "../utils/styles";
+import ItemLabel from "./ItemLabel";
+import InlineInput from "./InlineInput";
+import ItemActions from "./ItemActions";
+import ExplorerContents from "./ExplorerContents";
+import {
+  FaChevronUp as ExpandedIcon,
+  FaChevronDown as CollapsedIcon,
+} from "react-icons/fa6";
+import { FaFileAlt as FileIcon } from "react-icons/fa";
+import IconButton from "./IconButton";
+import { isValidName } from "../utils/validation";
+
+const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
+  const [expanded, setExpanded] = useState(false);
+  const isDirectory = data.type === "directory";
+  const [creating, setCreating] = useState("");
+  const [deleted, setDeleted] = useState(false);
+
+  const handleSubmit = (newText) => {
+    if (!isValidName(newText)) {
+      setCreating("");
+      return;
+    }
+
+    for (const child of data.contents) {
+      if (child.name === newText) {
+        setCreating("");
+        return;
+      }
+    }
+
+    let newObject;
+    if (creating === "file") {
+      newObject = {
+        name: newText,
+        type: "file",
+        contents: "",
+      };
+    } else if (creating === "directory") {
+      newObject = {
+        name: newText,
+        type: "directory",
+        contents: [],
+      };
+    }
+    updateParent(
+      "contents",
+      [...data.contents, newObject].sort((a, b) => a.name.localeCompare(b.name))
+    );
+    setExpanded(true);
+    setCreating("");
+  };
+
+  const inputRef = useRef(null);
+
+  const focusOnInput = () => {
+    inputRef.current?.focus();
+  };
+
+  const handleCreateFile = () => {
+    setCreating("file");
+  };
+
+  const handleCreateDirectory = () => {
+    setCreating("directory");
+  };
+
+  useEffect(() => {
+    if (creating) {
+      focusOnInput();
+    }
+  }, [creating]);
+
+  const actionHandlers = {
+    handleCreateFile,
+    handleCreateDirectory,
+    handleDelete: () => {
+      try {
+        handleDelete();
+        setDeleted(true);
+      } catch (_) {}
+    },
+  };
+
+  if (deleted) {
+    return null;
+  }
+
+  return (
+    <div className="pt-1 md:pt-2 flex flex-col w-full">
+      <div className={`${fontSizes.label} flex flex-row justify-between`}>
+        <div className="flex flex-row gap-1 items-center">
+          {isDirectory ? (
+            <IconButton
+              action="alternate"
+              onClick={() => setExpanded((prev) => !prev)}
+            >
+              {expanded ? (
+                <ExpandedIcon size={"0.8em"} />
+              ) : (
+                <CollapsedIcon size={"0.8em"} />
+              )}
+            </IconButton>
+          ) : (
+            <IconButton action="alternate">
+              <FileIcon size={"0.8em"} />
+            </IconButton>
+          )}
+          <ItemLabel
+            text={data.name}
+            renameText={(newName) => updateParent("name", newName)}
+          />
+        </div>
+        <ItemActions
+          {...actionHandlers}
+          isDirectory={isDirectory}
+          isRoot={isRoot}
+        />
+      </div>
+      <div className="pl-2">
+        {creating && <InlineInput ref={inputRef} handleSubmit={handleSubmit} />}
+        {isDirectory && expanded && (
+          <ExplorerContents data={data} updateParent={updateParent} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ExplorerTree;

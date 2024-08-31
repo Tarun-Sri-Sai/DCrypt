@@ -32,7 +32,7 @@ export const validateItem = (item, isRoot = true) => {
     );
   }
 
-  if (isRoot && item.name !== "Item") {
+  if (isRoot && item.name !== "root") {
     return false;
   }
 
@@ -41,4 +41,8 @@ export const validateItem = (item, isRoot = true) => {
   }
 
   return true;
+};
+
+export const isValidName = (name) => {
+  return name.length > 0 && name.length <= 15;
 };

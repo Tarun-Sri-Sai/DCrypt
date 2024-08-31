@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking some details. Please wait"} />
+        <Loader message={"Checking vault access. Please wait"} />
       ) : (
         <>
           {context.vault === null ? (

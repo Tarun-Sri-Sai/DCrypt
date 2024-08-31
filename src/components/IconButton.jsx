@@ -1,10 +1,15 @@
 import React from "react";
-import { fontSizes, paddings } from "../utils/styles";
+import { fontSizes, iconPalettes } from "../utils/styles";
 
-const IconButton = ({ children, action = "primary", ...buttonProps }) => {
+const IconButton = ({
+  children,
+  action = "primary",
+  size = "label",
+  ...buttonProps
+}) => {
   return (
     <div
-      className={`${paddings.icon} ${fontSizes.label} flex items-center justify-center bg-white text-blue-500`}
+      className={`${fontSizes[size]} ${iconPalettes[action]}`}
       {...buttonProps}
     >
       {children}

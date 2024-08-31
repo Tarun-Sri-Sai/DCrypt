@@ -11,7 +11,7 @@ const DashboardHeader = () => {
   return (
     <div className="flex flex-row items-center justify-between p-1 sm:p-2">
       <h1 className={`${fontSizes.header} font-bold`}>DCrypt</h1>
-      <Button onClick={handleClick}>Logout</Button>
+      <Button type="button" onClick={handleClick}>Logout</Button>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const Login = () => {
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking some details. Please wait"} />
+        <Loader message={"Searching for your vault. Please wait"} />
       ) : (
         <LoginForm />
       )}
