@@ -4,10 +4,10 @@ import { useDcryptContext } from "../contexts/DcryptContext";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { windowProps, vaultProps } = useDcryptContext();
+  const context = useDcryptContext();
 
   useEffect(() => {
-    window.electron.encryptVault(windowProps.directory, vaultProps.vault);
+    window.electron.encryptVault(context.directory, context.vault);
   }, []);
 
   return (

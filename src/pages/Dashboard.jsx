@@ -6,13 +6,13 @@ import DashboardView from "../components/DashboardView";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { windowProps, vaultProps } = useDcryptContext();
+  const context = useDcryptContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkDirectoryAndPassword = async () => {
       const password = await window.electron.getPassword();
-      if (windowProps.directory === null || password === null) {
+      if (context.directory === null || password === null) {
         navigate("/");
       }
 
@@ -28,7 +28,7 @@ const Dashboard = () => {
         <Loader message={"Checking some details. Please wait"} />
       ) : (
         <>
-          {vaultProps.vault === null ? (
+          {context.vault === null ? (
             <Navigate to="/signup" />
           ) : (
             <>

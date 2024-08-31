@@ -4,11 +4,11 @@ import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "./Loader";
 
 const Layout = () => {
-  const { windowProps } = useDcryptContext();
+  const context = useDcryptContext();
 
   return (
     <>
-      {windowProps.isExiting ? (
+      {context.isExiting ? (
         <Loader message={"Encrypting your vault..."} />
       ) : (
         <Outlet />
