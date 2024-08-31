@@ -1,43 +1,43 @@
-const isValidChildren = (vault) => {
-  if (vault.type === "directory") {
-    if (!Array.isArray(vault.children)) {
+const isValidContents = (item) => {
+  if (item.type === "directory") {
+    if (!Array.isArray(item.contents)) {
       return false;
     }
-    for (const child of vault.children) {
-      validateVault(child, false);
+    for (const child of item.contents) {
+      validateItem(child, false);
     }
     return true;
   }
-  if (vault.type === "file") {
-    if (typeof vault.children !== "string") {
+  if (item.type === "file") {
+    if (typeof item.contents !== "string") {
       return false;
     }
     return true;
   }
-  return true;
+  return false;
 };
 
-export const validateVault = (vault, isRoot = true) => {
-  if (typeof vault !== "object" || vault === null || Array.isArray(vault)) {
-    throw new Error("Root directory is not a valid object");
+export const validateItem = (item, isRoot = true) => {
+  if (typeof item !== "object" || item === null || Array.isArray(item)) {
+    throw new Error("Item is not a valid object");
   }
 
-  if (isRoot && Object.keys(vault).length === 0) {
+  if (isRoot && Object.keys(item).length === 0) {
     return false;
   }
 
-  if (!("type" in vault && "name" in vault && "children" in vault)) {
+  if (!("type" in item && "name" in item && "contents" in item)) {
     throw new Error(
-      "Every object should contain 'type', 'name', and 'children' properties"
+      "Every object should contain 'type', 'name', and 'contents' properties"
     );
   }
 
-  if (isRoot && vault.name !== "Vault") {
+  if (isRoot && item.name !== "Item") {
     return false;
   }
 
-  if (!isValidChildren(vault)) {
-    throw new Error("One or more sub-vaults are invalid");
+  if (!isValidContents(item)) {
+    throw new Error("One or more items are invalid");
   }
 
   return true;
