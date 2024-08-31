@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import { useDcryptContext } from "../contexts/DcryptContext";
 
 const Root = () => {
-  const { directory } = useDcryptContext();
+  const { windowProps } = useDcryptContext();
 
-  return directory === null ? (
+  return windowProps.directory === null ? (
     <Navigate to={"/vault-location"} />
   ) : (
     <Navigate to={"/login"} />

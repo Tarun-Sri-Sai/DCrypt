@@ -12,15 +12,25 @@ export const DcryptProvider = ({ children }) => {
   const [directory, setDirectory] = useState(lsDirectory);
   const [isExiting, setIsExiting] = useState(false);
 
-  const updateVault = (newVault) => {
-    setVault((oldVault) => ({ ...oldVault, ...newVault }));
+  const updateVault = (key, value) => {
+    setVault((oldVault) => ({ ...oldVault, [key]: value }));
   };
-
-  const clearVault = () => setVault({});
 
   const updateDirectory = (newDirectory) => {
     setDirectory(newDirectory);
     localStorage.setItem(DIRECTORY_KEY, newDirectory);
+  };
+
+  const vaultProps = {
+    vault,
+    updateVault,
+    setVault,
+  };
+
+  const windowProps = {
+    directory,
+    updateDirectory,
+    isExiting,
   };
 
   window.electron.onRequestEncryption(async () => {
@@ -32,12 +42,8 @@ export const DcryptProvider = ({ children }) => {
   return (
     <DcryptContext.Provider
       value={{
-        vault,
-        updateVault,
-        directory,
-        clearVault,
-        updateDirectory,
-        isExiting,
+        vaultProps,
+        windowProps,
       }}
     >
       {children}

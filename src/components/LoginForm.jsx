@@ -8,14 +8,14 @@ import Button from "./Button";
 const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const { directory, updateVault } = useDcryptContext();
+  const { windowProps, vaultProps } = useDcryptContext();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await window.electron.storePassword(password);
-    const electronVault = await window.electron.decryptVault(directory);
+    const electronVault = await window.electron.decryptVault(windowProps.directory);
 
     if (electronVault === null) {
       setError("Invalid password. Try again");
@@ -23,7 +23,7 @@ const LoginForm = () => {
       return;
     }
 
-    updateVault(electronVault);
+    vaultProps.setVault(electronVault);
     navigate("/dashboard");
   };
 

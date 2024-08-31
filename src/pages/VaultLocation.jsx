@@ -4,13 +4,13 @@ import Loader from "../components/Loader";
 import { Navigate } from "react-router-dom";
 
 const VaultLocation = () => {
-  const { updateDirectory } = useDcryptContext();
+  const { windowProps } = useDcryptContext();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getDirectory = async () => {
       const selectedDirectory = await window.electron.selectDirectory();
-      updateDirectory(selectedDirectory);
+      windowProps.updateDirectory(selectedDirectory);
 
       setIsLoading(false);
     };

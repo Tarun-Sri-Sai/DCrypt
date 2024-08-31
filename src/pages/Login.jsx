@@ -6,16 +6,16 @@ import LoginForm from "../components/LoginForm";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { directory } = useDcryptContext();
+  const { windowProps } = useDcryptContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkDirectoryAndVault = async () => {
-      if (directory === null) {
+      if (windowProps.directory === null) {
         navigate("/vault-location");
       }
 
-      const result = await window.electron.checkVault(directory);
+      const result = await window.electron.checkVault(windowProps.directory);
       if (!result) {
         navigate("/signup");
       }
