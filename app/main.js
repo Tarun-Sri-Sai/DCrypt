@@ -28,7 +28,7 @@ const createWindow = () => {
   if (IS_DEV) {
     mainWindow.loadURL("http://localhost:3000");
   } else {
-    mainWindow.loadFile(path.join(__dirname, "build", "index.html"));
+    mainWindow.loadFile(path.join(__dirname, "..", "build", "index.html"));
   }
 
   mainWindow.on("close", (e) => {
