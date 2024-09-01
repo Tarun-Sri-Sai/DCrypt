@@ -7,8 +7,12 @@ const Logout = () => {
   const { directory, vault, resetOpenFile } = useDcryptContext();
 
   useEffect(() => {
-    window.electron.encryptVault(directory, vault);
-    resetOpenFile();
+    const cleanUp = async () => {
+      await window.electron.encryptVault(directory, vault);
+      resetOpenFile();
+    };
+
+    cleanUp();
   }, []);
 
   return (

@@ -1,3 +1,5 @@
+import { MAX_ITEM_LENGTH } from "./constants";
+
 const isValidContents = (item) => {
   if (item.type === "directory") {
     if (!Array.isArray(item.contents)) {
@@ -44,5 +46,5 @@ export const validateItem = (item, isRoot = true) => {
 };
 
 export const isValidName = (name) => {
-  return name.length > 0 && name.length <= 15;
+  return name.length > 0 && name.length <= MAX_ITEM_LENGTH;
 };

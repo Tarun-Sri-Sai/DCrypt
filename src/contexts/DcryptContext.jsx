@@ -1,6 +1,11 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-
-const DIRECTORY_KEY = "dcryptDirectory";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { DIRECTORY_KEY } from "../utils/constants";
 
 const DcryptContext = createContext();
 export const useDcryptContext = () => useContext(DcryptContext);
@@ -40,6 +45,17 @@ export const DcryptProvider = ({ children }) => {
     setOpenFileName("");
     updateOnSave(() => {});
   };
+
+  useEffect(() => {
+    const saveVaultOnChange = async () => {
+      const passwordExists = await window.electron.getPassword();
+      if (passwordExists) {
+        await window.electron.encryptVault(directory, vault);
+      }
+    };
+
+    saveVaultOnChange();
+  }, [directory, vault]);
 
   return (
     <DcryptContext.Provider
