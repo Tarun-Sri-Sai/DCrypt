@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InlineInput from "./InlineInput";
 import { isValidName } from "../utils/validation";
 
-const ItemLabel = ({ text, renameText }) => {
+const ItemLabel = ({ text, renameText, onClick }) => {
   const [renaming, setRenaming] = useState(false);
   const handleSubmit = (newText) => {
     if (isValidName(newText)) {
@@ -19,7 +19,8 @@ const ItemLabel = ({ text, renameText }) => {
       ) : (
         <span
           className="px-1 md:px-2"
-          onDoubleClick={() => setRenaming((prev) => !prev)}
+          onClick={onClick}
+          onContextMenu={() => setRenaming((prev) => !prev)}
         >
           {text}
         </span>

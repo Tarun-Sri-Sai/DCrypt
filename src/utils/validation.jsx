@@ -37,7 +37,7 @@ export const validateItem = (item, isRoot = true) => {
   }
 
   if (!isValidContents(item)) {
-    throw new Error("One or more items are invalid");
+    throw new Error(`One or more items are invalid. ${JSON.stringify(item)}`);
   }
 
   return true;

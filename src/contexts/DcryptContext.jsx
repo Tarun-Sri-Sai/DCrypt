@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 
 const DIRECTORY_KEY = "dcryptDirectory";
 
@@ -10,22 +10,36 @@ export const DcryptProvider = ({ children }) => {
 
   const lsDirectory = localStorage.getItem(DIRECTORY_KEY);
   const [directory, setDirectory] = useState(lsDirectory);
-  const [isExiting, setIsExiting] = useState(false);
+
+  const [fileContents, setFileContents] = useState("");
+  const [openFileName, setOpenFileName] = useState("");
+  const [onSave, setOnSave] = useState(() => () => {});
+
+  const updateOnSave = useCallback((newOnSave) => {
+    setOnSave(() => newOnSave);
+  }, []);
 
   const updateVault = (key, value) => {
     setVault((oldVault) => ({ ...oldVault, [key]: value }));
   };
 
   const updateDirectory = (newDirectory) => {
-    setDirectory(newDirectory);
-    localStorage.setItem(DIRECTORY_KEY, newDirectory);
+    if (newDirectory !== null) {
+      setDirectory(newDirectory);
+      localStorage.setItem(DIRECTORY_KEY, newDirectory);
+    }
   };
 
-  window.electron.onRequestEncryption(async () => {
-    setIsExiting(true);
-    await window.electron.encryptVault(directory, vault);
-    setIsExiting(false);
-  });
+  const resetDirectory = () => {
+    setDirectory(null);
+    localStorage.removeItem(DIRECTORY_KEY);
+  };
+
+  const resetOpenFile = () => {
+    setFileContents("");
+    setOpenFileName("");
+    updateOnSave(() => {});
+  };
 
   return (
     <DcryptContext.Provider
@@ -35,7 +49,14 @@ export const DcryptProvider = ({ children }) => {
         setVault,
         directory,
         updateDirectory,
-        isExiting,
+        resetDirectory,
+        fileContents,
+        setFileContents,
+        onSave,
+        updateOnSave,
+        openFileName,
+        setOpenFileName,
+        resetOpenFile,
       }}
     >
       {children}

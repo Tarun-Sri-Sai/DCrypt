@@ -12,13 +12,13 @@ const ExplorerContents = ({ data, updateParent }) => {
 
     const updateChildsParent = (key, value) => {
       const newContents = [...data.contents];
-      newContents[index][key] = value;
+      newContents[index] = { ...data.contents[index], [key]: value };
       updateParent("contents", newContents);
     };
 
     return (
       <ExplorerTree
-        key={index}
+        key={item.name}
         data={item}
         handleDelete={handleChildDelete}
         updateParent={updateChildsParent}

@@ -11,12 +11,15 @@ import {
 import { FaFileAlt as FileIcon } from "react-icons/fa";
 import IconButton from "./IconButton";
 import { isValidName } from "../utils/validation";
+import { useDcryptContext } from "../contexts/DcryptContext";
 
 const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
   const [expanded, setExpanded] = useState(false);
   const isDirectory = data.type === "directory";
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
+  const { setFileContents, updateOnSave, setOpenFileName, resetOpenFile } =
+    useDcryptContext();
 
   const handleSubmit = (newText) => {
     if (!isValidName(newText)) {
@@ -80,8 +83,19 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
       try {
         handleDelete();
         setDeleted(true);
+        resetOpenFile();
       } catch (_) {}
     },
+  };
+
+  const handleOpenFile = () => {
+    if (!isDirectory) {
+      setFileContents(data.contents);
+      updateOnSave((newContents) => {
+        updateParent("contents", newContents);
+      });
+      setOpenFileName(data.name);
+    }
   };
 
   if (deleted) {
@@ -110,7 +124,10 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
           )}
           <ItemLabel
             text={data.name}
-            renameText={(newName) => updateParent("name", newName)}
+            renameText={(newName) => {
+              updateParent("name", newName);
+            }}
+            onClick={handleOpenFile}
           />
         </div>
         <ItemActions
