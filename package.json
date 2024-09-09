@@ -2,7 +2,7 @@
   "name": "dcrypt",
   "version": "1.0.0",
   "private": true,
-  "main": "app/main.js",
+  "main": "electron/main.js",
   "homepage": ".",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -14,9 +14,9 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "watch": "cross-env NODE_ENV=development npx nodemon",
+    "react-start": "cross-env BROWSER=none react-scripts start",
+    "react-build": "react-scripts build",
+    "electron-watch": "cross-env NODE_ENV=development npx nodemon",
     "electron": "cross-env NODE_ENV=production electron ."
   },
   "browserslist": {

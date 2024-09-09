@@ -1,32 +1,32 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
 const {
-  INDEX_HTML,
   DEFAULT_DIMS,
   PRELOAD_PATH,
-  REACT_DEV_URL,
   IS_DEV,
-} = require("./utils/constants");
+  REACT_DEV_URL,
+  REACT_INDEX_PATH,
+} = require("./constants.js");
+const { app, BrowserWindow, ipcMain } = require("electron");
 
-global.share = { ipcMain };
+let mainWindow;
+global.share = { ipcMain, mainWindow };
 
-require("./listeners/directory/index");
-require("./listeners/password/index");
-require("./listeners/vault/index");
+require("./handlers.js");
 
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     ...DEFAULT_DIMS,
     webPreferences: {
       preload: PRELOAD_PATH,
       nodeIntegration: false,
       contextIsolation: true,
+      devTools: IS_DEV,
     },
   });
 
   if (IS_DEV) {
     mainWindow.loadURL(REACT_DEV_URL);
   } else {
-    mainWindow.loadFile(INDEX_HTML);
+    mainWindow.loadFile(REACT_INDEX_PATH);
   }
 };
 

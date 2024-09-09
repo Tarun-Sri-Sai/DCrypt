@@ -1,40 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useDcryptContext } from "../contexts/DcryptContext";
-import DashboardView from "../components/DashboardView";
+import DashboardHeader from "../components/DashboardHeader";
+import DashboardContents from "../components/DashboardContents";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const context = useDcryptContext();
+  const { directory, password, setVault } = useDcryptContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkDirectoryAndPassword = async () => {
-      const password = await window.electron.getPassword();
-      if (context.directory === null || password === null) {
+    const decryptVault = async () => {
+      if (directory === null || password === null) {
         navigate("/");
+        return;
       }
 
+      const [hasVault, checkError] = await window.electron.hasVault(directory);
+      if (checkError || !hasVault) {
+        setVault({});
+        setIsLoading(false);
+        return;
+      }
+
+      const [vault, decryptError] = await window.electron.decryptVault(
+        directory,
+        password
+      );
+      if (decryptError) {
+        window.electron.sendAlert("Something is wrong. Try again");
+        navigate("/");
+        return;
+      }
+
+      setVault(vault);
       setIsLoading(false);
     };
 
-    checkDirectoryAndPassword();
+    decryptVault();
   }, []);
 
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking vault access. Please wait"} />
+        <Loader message={"Decrypting the vault. Please wait"} />
       ) : (
         <>
-          {context.vault === null ? (
-            <Navigate to="/signup" />
-          ) : (
-            <>
-              <DashboardView />
-            </>
-          )}
+          <DashboardHeader />
+          <DashboardContents />
         </>
       )}
     </>

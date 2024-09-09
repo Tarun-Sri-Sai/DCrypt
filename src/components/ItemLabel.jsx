@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InlineInput from "./InlineInput";
-import { isValidName } from "../utils/validation";
+import { isValidName } from "../utils";
 
 const ItemLabel = ({ text, renameText, onClick }) => {
   const [renaming, setRenaming] = useState(false);

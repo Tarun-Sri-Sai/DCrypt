@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { fontSizes } from "../utils/styles";
 import ItemLabel from "./ItemLabel";
 import InlineInput from "./InlineInput";
 import ItemActions from "./ItemActions";
@@ -10,11 +9,11 @@ import {
 } from "react-icons/fa6";
 import { FaFileAlt as FileIcon } from "react-icons/fa";
 import IconButton from "./IconButton";
-import { isValidName } from "../utils/validation";
+import { isValidName } from "../utils";
 import { useDcryptContext } from "../contexts/DcryptContext";
 
 const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isDirectory = data.type === "directory";
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
@@ -52,7 +51,7 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
       "contents",
       [...data.contents, newObject].sort((a, b) => a.name.localeCompare(b.name))
     );
-    setExpanded(true);
+    setIsExpanded(true);
     setCreating("");
   };
 
@@ -104,14 +103,14 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
 
   return (
     <div className="pt-1 md:pt-2 flex flex-col w-full">
-      <div className={`${fontSizes.label} flex flex-row justify-between`}>
+      <div className="text-xs sm:text-sm md:text-base flex flex-row justify-between">
         <div className="flex flex-row gap-1 items-center">
           {isDirectory ? (
             <IconButton
               action="alternate"
-              onClick={() => setExpanded((prev) => !prev)}
+              onClick={() => setIsExpanded((prev) => !prev)}
             >
-              {expanded ? (
+              {isExpanded ? (
                 <ExpandedIcon size={"0.8em"} />
               ) : (
                 <CollapsedIcon size={"0.8em"} />
@@ -132,13 +131,13 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
         </div>
         <ItemActions
           {...actionHandlers}
-          isDirectory={isDirectory}
+          showCreateIcons={isDirectory && isExpanded}
           isRoot={isRoot}
         />
       </div>
       <div className="pl-2">
         {creating && <InlineInput ref={inputRef} handleSubmit={handleSubmit} />}
-        {isDirectory && expanded && (
+        {isDirectory && isExpanded && (
           <ExplorerContents data={data} updateParent={updateParent} />
         )}
       </div>

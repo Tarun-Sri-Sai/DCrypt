@@ -5,17 +5,17 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { DIRECTORY_KEY } from "../utils/constants";
+import { DIRECTORY_KEY } from "../constants";
 
 const DcryptContext = createContext();
 export const useDcryptContext = () => useContext(DcryptContext);
 
 export const DcryptProvider = ({ children }) => {
+  const [directory, setDirectory] = useState(
+    localStorage.getItem(DIRECTORY_KEY)
+  );
   const [vault, setVault] = useState({});
-
-  const lsDirectory = localStorage.getItem(DIRECTORY_KEY);
-  const [directory, setDirectory] = useState(lsDirectory);
-
+  const [password, setPassword] = useState("");
   const [fileContents, setFileContents] = useState("");
   const [openFileName, setOpenFileName] = useState("");
   const [onSave, setOnSave] = useState(() => () => {});
@@ -48,9 +48,8 @@ export const DcryptProvider = ({ children }) => {
 
   useEffect(() => {
     const saveVaultOnChange = async () => {
-      const passwordExists = await window.electron.getPassword();
-      if (passwordExists) {
-        await window.electron.encryptVault(directory, vault);
+      if (password) {
+        await window.electron.encryptVault(vault, directory, password);
       }
     };
 
@@ -60,12 +59,14 @@ export const DcryptProvider = ({ children }) => {
   return (
     <DcryptContext.Provider
       value={{
-        vault,
-        updateVault,
-        setVault,
         directory,
         updateDirectory,
         resetDirectory,
+        vault,
+        setVault,
+        updateVault,
+        password,
+        setPassword,
         fileContents,
         setFileContents,
         onSave,

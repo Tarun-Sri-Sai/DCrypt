@@ -1,30 +1,35 @@
 import React, { useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
-import { useNavigate } from "react-router-dom";
-import ErrorBox from "./ErrorBox";
 import Input from "./Input";
 import Button from "./Button";
 
-const LoginForm = () => {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const context = useDcryptContext();
-  const navigate = useNavigate();
+const LoginForm = ({ onSuccess, children }) => {
+  const [passwordInput, setPasswordInput] = useState("");
+  const { directory } = useDcryptContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await window.electron.storePassword(password);
-    const electronVault = await window.electron.decryptVault(context.directory);
-
-    if (electronVault === null) {
-      setError("Invalid password. Try again");
-      setPassword("");
+    const [hashedPassword, hashingError] = await window.electron.hashPassword(
+      passwordInput
+    );
+    if (hashingError) {
+      window.electron.sendAlert(`Unable to hash the password: ${hashingError}`);
       return;
     }
 
-    context.setVault(electronVault);
-    navigate("/dashboard");
+    const [, decryptionError] = await window.electron.decryptVault(
+      directory,
+      hashedPassword
+    );
+
+    if (decryptionError) {
+      window.electron.sendAlert("Invalid password. Try again");
+      setPasswordInput("");
+      return;
+    }
+
+    onSuccess(hashedPassword);
   };
 
   return (
@@ -37,18 +42,14 @@ const LoginForm = () => {
           id="password"
           label={"Enter the master password"}
           type="password"
-          placeholder="********"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          placeholder="••••••••••"
+          onChange={(e) => setPasswordInput(e.target.value)}
+          value={passwordInput}
         />
       </div>
 
       <div className="mb-2">
-        {error !== null && <ErrorBox message={error} />}
-      </div>
-
-      <div className="mb-2">
-        <Button type="submit">Go to vault</Button>
+        <Button type="submit">{children}</Button>
       </div>
     </form>
   );

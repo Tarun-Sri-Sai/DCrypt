@@ -1,8 +1,7 @@
 import React, { Suspense, lazy } from "react";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import Error from "./components/Error";
 import Loader from "./components/Loader";
-import Layout from "./components/Layout";
 import { DcryptProvider } from "./contexts/DcryptContext";
 
 const VaultLocation = lazy(() => import("./pages/VaultLocation"));
@@ -15,8 +14,8 @@ const Signup = lazy(() => import("./pages/Signup"));
 const router = createHashRouter([
   {
     path: "/",
-    element: <Layout />,
-    errorElement: <Error message={"Page Not Found"} />,
+    element: <Outlet className="font-serif" />,
+    errorElement: <Error message={"Page not found"} />,
     children: [
       { index: true, element: <Root /> },
       { path: "/vault-location", element: <VaultLocation /> },
@@ -31,7 +30,7 @@ const router = createHashRouter([
 const App = () => {
   return (
     <DcryptProvider>
-      <Suspense fallback={<Loader message={"Loading..."} />}>
+      <Suspense fallback={<Loader message={"Loading page..."} />}>
         <RouterProvider router={router} />
       </Suspense>
     </DcryptProvider>

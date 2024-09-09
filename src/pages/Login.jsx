@@ -6,18 +6,20 @@ import LoginForm from "../components/LoginForm";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const context = useDcryptContext();
+  const { directory, setPassword } = useDcryptContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkDirectoryAndVault = async () => {
-      if (context.directory === null) {
+      if (directory === null) {
         navigate("/vault-location");
+        return;
       }
 
-      const result = await window.electron.checkVault(context.directory);
-      if (!result) {
+      const [hasVault, checkError] = await window.electron.hasVault(directory);
+      if (checkError || !hasVault) {
         navigate("/signup");
+        return;
       }
 
       setIsLoading(false);
@@ -29,9 +31,16 @@ const Login = () => {
   return (
     <>
       {isLoading ? (
-        <Loader message={"Searching for your vault. Please wait"} />
+        <Loader message={"Searching for the vault file. Please wait"} />
       ) : (
-        <LoginForm />
+        <LoginForm
+          onSuccess={async (password) => {
+            setPassword(password);
+            navigate("/dashboard");
+          }}
+        >
+          Go to vault
+        </LoginForm>
       )}
     </>
   );

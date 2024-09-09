@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["standard", "plugin:react/recommended"],
+  "overrides": [
+    {
+      "env": {
+        "node": true
+      },
+      "files": ["src/**/*.{js,jsx,ts,tsx}"],
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    }
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "quotes": ["error", "double"],
+    "comma-dangle": ["error", "only-multiline"],
+    "semi": ["error", "always"],
+    "no-extra-semi": "off",
+    "react/prop-types": "off",
+    "multiline-ternary": ["error", "never"]
+  }
+}

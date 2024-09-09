@@ -1,4 +1,4 @@
-import { MAX_ITEM_LENGTH } from "./constants";
+import { ITEM_NAME_LIMIT, MIN_PASSWORD_LIMIT } from "./constants";
 
 const isValidContents = (item) => {
   if (item.type === "directory") {
@@ -6,7 +6,7 @@ const isValidContents = (item) => {
       return false;
     }
     for (const child of item.contents) {
-      validateItem(child, false);
+      isValidItem(child, false);
     }
     return true;
   }
@@ -19,7 +19,7 @@ const isValidContents = (item) => {
   return false;
 };
 
-export const validateItem = (item, isRoot = true) => {
+export const isValidItem = (item, isRoot = true) => {
   if (typeof item !== "object" || item === null || Array.isArray(item)) {
     throw new Error("Item is not a valid object");
   }
@@ -46,5 +46,14 @@ export const validateItem = (item, isRoot = true) => {
 };
 
 export const isValidName = (name) => {
-  return name.length > 0 && name.length <= MAX_ITEM_LENGTH;
+  return (
+    name.trim().length === name.length &&
+    name.length > 0 &&
+    name.length <= ITEM_NAME_LIMIT &&
+    /^[a-zA-Z0-9._-\s]+$/.test(name)
+  );
+};
+
+export const isValidPassword = (password) => {
+  return !password.includes(" ") && password.length > MIN_PASSWORD_LIMIT;
 };

@@ -10,12 +10,12 @@ const ItemActions = ({
   handleCreateFile,
   handleCreateDirectory,
   handleDelete,
-  isDirectory,
+  showCreateIcons,
   isRoot,
 }) => {
   return (
     <div className="flex flex-row gap-1 items-center">
-      {isDirectory && (
+      {showCreateIcons && (
         <>
           <IconButton action={"alternate"} onClick={handleCreateFile}>
             <CreateFileIcon size={"0.8em"} />
