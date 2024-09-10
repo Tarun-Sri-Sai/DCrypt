@@ -1,7 +1,7 @@
 const { dialog } = require("electron");
 const path = require("path");
-const { VAULT_FILE } = require("./constants");
-const { decryptData, encryptData } = require("./utils");
+const { VAULT_FILE, EXPORT_FILE_PREFIX } = require("./constants");
+const { decryptData, encryptData, getCurrentTime } = require("./utils");
 const fs = require("fs");
 const crypto = require("crypto");
 
@@ -105,7 +105,7 @@ module.exports = {
     }
   }),
 
-  sendAlert: global.share.ipcMain.handle("send-alert", (_, message) => {
+  sendAlert: global.share.ipcMain.handle("send-alert", async (_, message) => {
     const options = {
       type: "none",
       buttons: ["Okay"],
@@ -117,8 +117,44 @@ module.exports = {
 
   exportVault: global.share.ipcMain.handle(
     "export-vault",
-    (_, vaultData) => {
-      
+    async (_, vaultData) => {
+      try {
+        const result = await dialog.showOpenDialog({
+          properties: ["openDirectory"],
+        });
+
+        if (result.canceled) {
+          return [null, "Operation canceled"];
+        }
+
+        const exportFile = path.join(
+          result.filePaths[0],
+          `${EXPORT_FILE_PREFIX}_${getCurrentTime()}.json`
+        );
+
+        fs.writeFileSync(exportFile, JSON.stringify(vaultData));
+        return [exportFile, null];
+      } catch (err) {
+        return [null, `Error while exporting to file: ${err}`];
+      }
     }
   ),
+
+  importVault: global.share.ipcMain.handle("import-vault", async (_) => {
+    try {
+      const result = await dialog.showOpenDialog({
+        filters: [{ name: "JSON Files", extensions: ["json"] }],
+        properties: ["openFile"],
+      });
+
+      if (result.canceled) {
+        return [null, "Operation canceled"];
+      }
+
+      const fileData = fs.readFileSync(result.filePaths[0]);
+      return [JSON.parse(fileData), null];
+    } catch (err) {
+      return [null, `Error while importing from file: ${err}`];
+    }
+  }),
 };

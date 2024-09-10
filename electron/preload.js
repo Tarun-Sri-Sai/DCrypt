@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld("electron", {
   hasVault: (directory) => ipcRenderer.invoke("has-vault", directory),
   sendAlert: (message) => ipcRenderer.invoke("send-alert", message),
   exportVault: (vaultData) => ipcRenderer.invoke("export-vault", vaultData),
+  importVault: () => ipcRenderer.invoke("import-vault"),
 });

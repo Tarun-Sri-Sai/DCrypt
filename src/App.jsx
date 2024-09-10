@@ -14,7 +14,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const router = createHashRouter([
   {
     path: "/",
-    element: <Outlet className="font-serif" />,
+    element: <Outlet />,
     errorElement: <Error message={"Page not found"} />,
     children: [
       { index: true, element: <Root /> },

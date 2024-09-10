@@ -21,7 +21,7 @@ const isValidContents = (item) => {
 
 export const isValidItem = (item, isRoot = true) => {
   if (typeof item !== "object" || item === null || Array.isArray(item)) {
-    throw new Error("Item is not a valid object");
+    return false;
   }
 
   if (isRoot && Object.keys(item).length === 0) {
@@ -29,9 +29,7 @@ export const isValidItem = (item, isRoot = true) => {
   }
 
   if (!("type" in item && "name" in item && "contents" in item)) {
-    throw new Error(
-      "Every object should contain 'type', 'name', and 'contents' properties"
-    );
+    return false;
   }
 
   if (isRoot && item.name !== "root") {
@@ -39,7 +37,7 @@ export const isValidItem = (item, isRoot = true) => {
   }
 
   if (!isValidContents(item)) {
-    throw new Error(`One or more items are invalid. ${JSON.stringify(item)}`);
+    return false;
   }
 
   return true;

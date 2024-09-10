@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ErrorBox from "./ErrorBox";
 import { useDcryptContext } from "../contexts/DcryptContext";
+import Info from "./Info";
+import { INFO_TIMEOUT } from "../constants";
 
 const Editor = () => {
   const { fileContents, onSave, openFileName } = useDcryptContext();
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState("");
   const [info, setInfo] = useState("");
+
+  const updateInfo = (message) => {
+    setInfo(message);
+    setTimeout(() => setInfo(""), INFO_TIMEOUT);
+  };
 
   useEffect(() => {
     setContent(fileContents);
@@ -16,8 +23,7 @@ const Editor = () => {
   const handleSave = useCallback(() => {
     if (onSave) {
       onSave(content);
-      setInfo("Saved!");
-      setTimeout(() => setInfo(""), 3000);
+      updateInfo("Saved!");
     }
   }, [onSave, content]);
 
@@ -49,7 +55,7 @@ const Editor = () => {
         className="flex-grow mb-2 p-2 border rounded editor"
         style={{ width: "100%", height: "100%" }}
       />
-      {info && <div className="mt-2 self-end text-green-500">Saved!</div>}
+      <Info message={info} />
     </div>
   );
 };

@@ -9,4 +9,5 @@ module.exports = {
   PRELOAD_PATH: path.join(__dirname, "preload.js"),
   REACT_INDEX_PATH: path.join(__dirname, "..", "build", "index.html"),
   REACT_DEV_URL: "http://localhost:3000",
+  EXPORT_FILE_PREFIX: "dcryptexport",
 };
