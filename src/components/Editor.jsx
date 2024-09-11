@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ErrorBox from "./ErrorBox";
 import { useDcryptContext } from "../contexts/DcryptContext";
-import Info from "./Info";
+import InfoText from "./InfoText";
 import { INFO_TIMEOUT } from "../constants";
+import ErrorText from "./ErrorText";
 
 const Editor = () => {
   const { fileContents, onSave, openFileName } = useDcryptContext();
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState("");
   const [info, setInfo] = useState("");
+  const [saveReminder, setSaveReminder] = useState("");
 
   const updateInfo = (message) => {
     setInfo(message);
@@ -24,8 +26,13 @@ const Editor = () => {
     if (onSave) {
       onSave(content);
       updateInfo("Saved!");
+      setSaveReminder("");
     }
   }, [onSave, content]);
+
+  useEffect(() => {
+    setSaveReminder("Press Ctrl+S to save. Otherwise changes will be lost");
+  }, [content]);
 
   useEffect(() => {
     const handleCtrlS = (e) => {
@@ -50,12 +57,14 @@ const Editor = () => {
     <div className="p-2 md:p-4 text-xs sm:text-sm md:text-base flex flex-col">
       <h2 className="text-xl mb-2">{openFileName}</h2>
       <textarea
+        rows={10}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="flex-grow mb-2 p-2 border rounded editor"
+        className="flex-grow mb-2 p-2 border rounded"
         style={{ width: "100%", height: "100%" }}
       />
-      <Info message={info} />
+      <ErrorText message={saveReminder} />
+      <InfoText message={info} />
     </div>
   );
 };

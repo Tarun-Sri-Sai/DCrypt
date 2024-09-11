@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import Header from "./Header";
-import Info from "./Info";
+import InfoText from "./InfoText";
 import { INFO_TIMEOUT } from "../constants";
 import { isValidItem } from "../utils";
 
@@ -56,7 +56,7 @@ const DashboardHeader = () => {
   return (
     <div className="flex flex-row items-center justify-between p-1 sm:p-2">
       <Header>DCrypt</Header>
-      <Info message={info} />
+      <InfoText message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
         <Button action="alternate" type="button" onClick={handleImport}>
           Import Vault
