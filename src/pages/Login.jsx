@@ -26,7 +26,7 @@ const Login = () => {
     };
 
     checkDirectoryAndVault();
-  }, []);
+  }, [directory]);
 
   return (
     <>

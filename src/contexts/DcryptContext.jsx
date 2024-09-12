@@ -11,9 +11,9 @@ const DcryptContext = createContext();
 export const useDcryptContext = () => useContext(DcryptContext);
 
 export const DcryptProvider = ({ children }) => {
-  const [directory, setDirectory] = useState(
-    localStorage.getItem(DIRECTORY_KEY)
-  );
+  const storedDirectory = localStorage.getItem(DIRECTORY_KEY);
+
+  const [directory, setDirectory] = useState(storedDirectory);
   const [vault, setVault] = useState({});
   const [password, setPassword] = useState("");
   const [fileContents, setFileContents] = useState("");
@@ -38,12 +38,19 @@ export const DcryptProvider = ({ children }) => {
   const resetDirectory = () => {
     setDirectory(null);
     localStorage.removeItem(DIRECTORY_KEY);
+    resetOpenFile();
+    resetData();
   };
 
   const resetOpenFile = () => {
     setFileContents("");
     setOpenFileName("");
     updateOnSave(() => {});
+  };
+
+  const resetData = () => {
+    setVault({});
+    setPassword("");
   };
 
   useEffect(() => {
@@ -74,6 +81,7 @@ export const DcryptProvider = ({ children }) => {
         openFileName,
         setOpenFileName,
         resetOpenFile,
+        resetData,
       }}
     >
       {children}

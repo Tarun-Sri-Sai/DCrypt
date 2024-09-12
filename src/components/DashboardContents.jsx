@@ -10,20 +10,22 @@ const DashboardContents = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const createStarterVault = () => {
-    setVault({ name: "root", type: "directory", contents: [] });
+    setVault({ name: "My Vault", type: "directory", contents: [] });
   };
 
   useEffect(() => {
-    const isValid = isValidItem(vault);
-    if (!isValid) {
-      window.electron.sendAlert(
-        "The given vault is invalid! Creating a starter vault"
-      );
+    if (Object.keys(vault).length === 0) {
       createStarterVault();
+    } else {
+      const isValid = isValidItem(vault);
+      if (!isValid) {
+        window.electron.sendAlert("Invalid vault, creating a starter vault");
+        createStarterVault();
+      }
     }
 
     setIsLoading(false);
-  }, []);
+  }, [vault]);
 
   const updateRoot = (key, value) => {
     if (key === "name" || key === "type") {

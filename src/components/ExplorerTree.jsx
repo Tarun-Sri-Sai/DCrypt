@@ -13,7 +13,7 @@ import { isValidName } from "../utils";
 import { useDcryptContext } from "../contexts/DcryptContext";
 
 const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(isRoot);
   const isDirectory = data.type === "directory";
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
@@ -105,22 +105,23 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
     <div className="pt-1 md:pt-2 flex flex-col w-full">
       <div className="text-xs sm:text-sm md:text-base flex flex-row justify-between">
         <div className="flex flex-row gap-1 items-center">
-          {isDirectory ? (
-            <IconButton
-              action="alternate"
-              onClick={() => setIsExpanded((prev) => !prev)}
-            >
-              {isExpanded ? (
-                <ExpandedIcon size={"0.8em"} />
-              ) : (
-                <CollapsedIcon size={"0.8em"} />
-              )}
-            </IconButton>
-          ) : (
-            <IconButton action="alternate">
-              <FileIcon size={"0.8em"} />
-            </IconButton>
-          )}
+          {!isRoot &&
+            (isDirectory ? (
+              <IconButton
+                action="alternate"
+                onClick={() => setIsExpanded((prev) => !prev)}
+              >
+                {isExpanded ? (
+                  <ExpandedIcon size={"0.8em"} />
+                ) : (
+                  <CollapsedIcon size={"0.8em"} />
+                )}
+              </IconButton>
+            ) : (
+              <IconButton action="alternate">
+                <FileIcon size={"0.8em"} />
+              </IconButton>
+            ))}
           <ItemLabel
             text={data.name}
             renameText={(newName) => {

@@ -32,7 +32,7 @@ export const isValidItem = (item, isRoot = true) => {
     return false;
   }
 
-  if (isRoot && item.name !== "root") {
+  if (isRoot && item.name !== "My Vault") {
     return false;
   }
 

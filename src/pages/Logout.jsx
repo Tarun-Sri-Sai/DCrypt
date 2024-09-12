@@ -4,16 +4,17 @@ import { useDcryptContext } from "../contexts/DcryptContext";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { directory, vault, resetOpenFile } = useDcryptContext();
+  const { directory, vault, resetOpenFile, resetData } = useDcryptContext();
 
   useEffect(() => {
     const cleanUp = async () => {
       await window.electron.encryptVault(directory, vault);
       resetOpenFile();
+      resetData();
     };
 
     cleanUp();
-  }, []);
+  }, [directory, vault]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

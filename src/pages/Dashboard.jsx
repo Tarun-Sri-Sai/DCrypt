@@ -39,7 +39,7 @@ const Dashboard = () => {
     };
 
     decryptVault();
-  }, []);
+  }, [directory, password]);
 
   return (
     <>
