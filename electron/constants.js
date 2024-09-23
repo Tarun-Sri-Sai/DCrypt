@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  DEFAULT_DIMS: { width: 800, height: 600 },
+  DEFAULT_DIMS: { width: 1000, height: 600 },
   IS_DEV: { production: false, development: true, test: true }[
     process.env.NODE_ENV
   ],
