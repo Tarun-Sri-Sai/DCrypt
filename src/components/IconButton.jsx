@@ -9,7 +9,7 @@ const IconButton = ({ children, action = "primary", ...buttonProps }) => {
 
   return (
     <div
-      className={`text-xs sm:text-sm md:text-base ${iconPalettes[action]}`}
+      className={`text-2xs sm:text-xs md:text-sm lg:text-base ${iconPalettes[action]}`}
       {...buttonProps}
     >
       {children}

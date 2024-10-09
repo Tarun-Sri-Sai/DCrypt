@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardContents from "../components/DashboardContents";
+import { sortRecursively } from "../utils";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +35,7 @@ const Dashboard = () => {
         return;
       }
 
-      setVault(vault);
+      setVault(sortRecursively(vault));
       setIsLoading(false);
     };
 

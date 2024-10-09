@@ -5,7 +5,7 @@ import { useDcryptContext } from "../contexts/DcryptContext";
 import Header from "./Header";
 import InfoText from "./InfoText";
 import { INFO_TIMEOUT } from "../constants";
-import { isValidItem } from "../utils";
+import { isValidItem, sortRecursively } from "../utils";
 
 const DashboardHeader = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const DashboardHeader = () => {
       return;
     }
 
-    setVault(vaultData);
+    setVault(sortRecursively(vaultData));
     updateInfo("Vault data imported!");
   };
 

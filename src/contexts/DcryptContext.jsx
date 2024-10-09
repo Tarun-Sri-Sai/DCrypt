@@ -19,6 +19,7 @@ export const DcryptProvider = ({ children }) => {
   const [fileContents, setFileContents] = useState("");
   const [openFileName, setOpenFileName] = useState("");
   const [onSave, setOnSave] = useState(() => () => {});
+  const [selected, setSelected] = useState(null);
 
   const updateOnSave = useCallback((newOnSave) => {
     setOnSave(() => newOnSave);
@@ -82,6 +83,8 @@ export const DcryptProvider = ({ children }) => {
         setOpenFileName,
         resetOpenFile,
         resetData,
+        selected,
+        setSelected,
       }}
     >
       {children}

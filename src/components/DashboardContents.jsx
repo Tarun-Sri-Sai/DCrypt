@@ -41,14 +41,14 @@ const DashboardContents = () => {
         <Loader message={"Validating vault schema. Please wait"} />
       ) : (
         <div className="flex flex-row w-full">
-          <div className="w-1/3 sm:w-1/4 lg:w-1/5">
+          <div className="w-1/3 md:w-29/100 lg:w-1/4 xl:45/200">
             <ExplorerTree
               updateParent={updateRoot}
               data={vault}
               handleDelete={null}
             />
           </div>
-          <div className="w-2/3 sm:w-3/4 lg:w-4/5">
+          <div className="w-2/3 md:w-71/100 lg:w-3/4 xl:w-155/200">
             <Editor />
           </div>
         </div>

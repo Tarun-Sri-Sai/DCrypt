@@ -55,3 +55,23 @@ export const isValidName = (name) => {
 export const isValidPassword = (password) => {
   return !password.includes(" ") && password.length > MIN_PASSWORD_LIMIT;
 };
+
+export const fileSystemComparator = (a, b) => {
+  const typeComparison =
+    a.type === "directory" ? -1 : a.type === b.type ? 0 : 1;
+  if (typeComparison !== 0) {
+    return typeComparison;
+  }
+  return a.name.localeCompare(b.name);
+};
+
+export const sortRecursively = (vault) => {
+  if (Array.isArray(vault)) {
+    return vault.map(sortRecursively).sort(fileSystemComparator);
+  } else if (typeof vault === "object" && vault !== null) {
+    for (const key in vault) {
+      vault[key] = sortRecursively(vault[key]);
+    }
+  }
+  return vault;
+};
