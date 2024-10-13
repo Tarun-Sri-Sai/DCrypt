@@ -57,10 +57,14 @@ export const isValidPassword = (password) => {
 };
 
 export const fileSystemComparator = (a, b) => {
-  const typeComparison =
-    a.type === "directory" ? -1 : a.type === b.type ? 0 : 1;
-  if (typeComparison !== 0) {
-    return typeComparison;
+  if (a.type === "directory" && b.type === "directory") {
+    return a.name.localeCompare(b.name);
+  }
+  if (a.type === "directory") {
+    return -1;
+  }
+  if (b.type === "directory") {
+    return 1;
   }
   return a.name.localeCompare(b.name);
 };
