@@ -56,7 +56,7 @@ const DashboardHeader = () => {
   return (
     <div className="flex flex-row items-center justify-between p-1 sm:p-2">
       <Header>DCrypt</Header>
-      <InfoText message={info} />
+      <InfoText className="text-center" message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
         <Button action="alternate" type="button" onClick={handleImport}>
           Import Vault

@@ -33,9 +33,15 @@ const ItemLabel = forwardRef(
         ) : (
           <span
             ref={ref}
+            tabIndex={0}
             className="px-1 md:px-2"
             onClick={onClick}
-            onDoubleClick={handleRenaming}
+            onKeyUp={(e) => {
+              if (e.key === "F2") {
+                e.preventDefault();
+                handleRenaming();
+              }
+            }}
             style={{ textDecoration: highlight ? "underline" : "none" }}
           >
             {text}

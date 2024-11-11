@@ -95,7 +95,9 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
 
   const handleOpenFile = () => {
     setSelected(labelRef.current);
-    if (!isDirectory) {
+    if (isDirectory) {
+      setIsExpanded((prevIsExpanded) => !prevIsExpanded);
+    } else {
       setFileContents(data.contents);
       updateOnSave((newContents) => {
         updateParent("contents", newContents);
@@ -147,7 +149,7 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
           />
         )}
       </div>
-      <div className="pl-1 md:pl-1.5 lg:pl-2 xl:pl-2.5">
+      <div className="pl-1.5 md:pl-2.25 lg:pl-3 xl:pl-3.75">
         {creating && (
           <InlineInput ref={createInputRef} handleSubmit={handleSubmit} />
         )}
