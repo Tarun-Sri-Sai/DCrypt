@@ -31,8 +31,8 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.20",
     "@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2",
+    "autoprefixer": "^10.4.20",
     "electron": "^32.0.1",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
