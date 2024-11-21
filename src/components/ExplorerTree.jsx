@@ -148,7 +148,7 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
             highlight={selected && selected === labelRef.current}
           />
         </div>
-        {selected && selected === labelRef.current && (
+        {(isRoot || (selected && selected === labelRef.current)) && (
           <ItemActions
             {...actionHandlers}
             showCreateIcons={isDirectory && isExpanded}
