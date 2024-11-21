@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useDcryptContext } from "../contexts/DcryptContext";
@@ -55,8 +55,8 @@ const DashboardHeader = () => {
 
   return (
     <div className="flex flex-row items-center justify-between p-1 sm:p-2">
-      <Header>DCrypt</Header>
-      <InfoText className="text-center" message={info} />
+      <Header>Dashboard</Header>
+      <InfoText className="flex w-full text-center" message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
         <Button action="alternate" type="button" onClick={handleImport}>
           Import Vault

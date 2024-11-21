@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ExplorerTree from "./ExplorerTree";
 import Editor from "./Editor";
 import { useDcryptContext } from "../contexts/DcryptContext";

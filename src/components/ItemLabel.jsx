@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useRef } from "react";
+import { forwardRef, useState, useRef } from "react";
 import InlineInput from "./InlineInput";
 import { isValidName } from "../utils";
 

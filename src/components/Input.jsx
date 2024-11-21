@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Input = ({ id, label, ...inputProps }) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -16,7 +16,7 @@ const Input = ({ id, label, ...inputProps }) => {
       <input
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
-        className="w-64 py-0.75 sm:py-1 md:py-1.25 lg:py-1.5 px-1.5 sm:px-2 md:px-2.5 lg:px-3 border rounded border-blue-500 focus:border-blue-600 focus-within:drop-shadow-2xl focus:outline-none"
+        className="py-0.75 sm:py-1 md:py-1.25 lg:py-1.5 px-1.5 sm:px-2 md:px-2.5 lg:px-3 border rounded border-blue-500 focus:border-blue-600 focus-within:drop-shadow-2xl focus:outline-none text-2xs sm:text-xs md:text-sm lg:text-base"
         id={id}
         {...inputProps}
       />

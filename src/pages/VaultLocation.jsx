@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "../components/Loader";
 import { Navigate } from "react-router-dom";

@@ -1,5 +1,3 @@
-import React from "react";
-
 const Button = ({ children, action = "primary", ...buttonProps }) => {
   const buttonPalettes = {
     primary: "bg-blue-500 hover:bg-blue-600 text-white",

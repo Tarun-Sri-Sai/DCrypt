@@ -1,13 +1,26 @@
-import React from "react";
 import ExplorerTree from "./ExplorerTree";
 
 const ExplorerContents = ({ data, updateParent }) => {
   return data.contents.map((item, index) => {
-    const handleChildDelete = () => {
+    const handleChildDelete = async () => {
+      const [confirmed, confirmError] = await window.electron.confirmDialog(
+        `Do you really want to delete ${item.name}?`
+      );
+
+      if (confirmError) {
+        window.electron.sendAlert(confirmError);
+        return;
+      }
+
+      if (!confirmed) {
+        return false;
+      }
+
       updateParent(
         "contents",
         data.contents.filter((_, i) => i !== index)
       );
+      return true;
     };
 
     const updateChildsParent = (key, value) => {

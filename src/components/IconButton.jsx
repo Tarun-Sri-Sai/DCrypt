@@ -1,5 +1,3 @@
-import React from "react";
-
 const IconButton = ({ children, action = "primary", ...buttonProps }) => {
   const iconPalettes = {
     primary: "bg-blue-500 hover:bg-blue-600 text-white",

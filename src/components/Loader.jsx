@@ -1,5 +1,3 @@
-import React from "react";
-
 const Loader = ({ message }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center z-50">

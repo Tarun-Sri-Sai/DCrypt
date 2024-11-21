@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import { useState, forwardRef } from "react";
 
 const InlineInput = forwardRef(({ initialText = "", handleSubmit }, ref) => {
   const [labelText, setLabelText] = useState(initialText);
@@ -13,7 +13,7 @@ const InlineInput = forwardRef(({ initialText = "", handleSubmit }, ref) => {
     >
       <input
         ref={ref}
-        className="w-full mr-1 border"
+        className="w-full mr-1 border text-2xs sm:text-xs md:text-sm lg:text-base"
         value={labelText}
         onChange={(e) => setLabelText(e.target.value)}
       />

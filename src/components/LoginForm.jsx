@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import Input from "./Input";
 import Button from "./Button";

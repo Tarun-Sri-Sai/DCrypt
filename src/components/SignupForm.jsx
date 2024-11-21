@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ErrorBox from "../components/ErrorBox";
 import Input from "../components/Input";
 import Button from "../components/Button";

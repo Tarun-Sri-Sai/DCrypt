@@ -106,13 +106,7 @@ module.exports = {
   }),
 
   sendAlert: global.share.ipcMain.handle("send-alert", async (_, message) => {
-    const options = {
-      type: "none",
-      buttons: ["Okay"],
-      title: "Alert!",
-      message,
-    };
-    dialog.showMessageBox(global.share.mainWindow, options);
+    dialog.showErrorBox("Operation failed", message);
   }),
 
   exportVault: global.share.ipcMain.handle(
@@ -157,4 +151,24 @@ module.exports = {
       return [null, `Error while importing from file: ${err}`];
     }
   }),
+
+  confirmDialog: global.share.ipcMain.handle("confirm-dialog", async (_, message) => {
+    try {
+      const options = {
+        type: "question",
+        buttons: ["Yes", "No"],
+        title: "Confirm",
+        message,
+      };
+
+      const result = await dialog.showMessageBox(global.share.mainWindow, options);
+
+      if (result.canceled) {
+        return [null, "Operation canceled"];
+      }
+      return [result.response === 0, null];
+    } catch (err) {
+      return [null, `Error while confirming operation: ${err}`];
+    }
+  })
 };

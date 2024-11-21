@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld("electron", {
   sendAlert: (message) => ipcRenderer.invoke("send-alert", message),
   exportVault: (vaultData) => ipcRenderer.invoke("export-vault", vaultData),
   importVault: () => ipcRenderer.invoke("import-vault"),
+  confirmDialog: (message) => ipcRenderer.invoke("confirm-dialog", message),
 });

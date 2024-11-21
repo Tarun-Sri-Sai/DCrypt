@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ErrorBox from "./ErrorBox";
 import { useDcryptContext } from "../contexts/DcryptContext";
 import InfoText from "./InfoText";

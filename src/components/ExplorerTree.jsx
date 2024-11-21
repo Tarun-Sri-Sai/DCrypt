@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import ItemLabel from "./ItemLabel";
 import InlineInput from "./InlineInput";
 import ItemActions from "./ItemActions";
@@ -84,19 +84,26 @@ const ExplorerTree = ({ updateParent, data, handleDelete, isRoot = true }) => {
   const actionHandlers = {
     handleCreateFile,
     handleCreateDirectory,
-    handleDelete: () => {
+    handleDelete: async () => {
       try {
-        handleDelete();
-        setDeleted(true);
-        resetOpenFile();
-      } catch (_) {}
+        const result = await handleDelete();
+        if (result) {
+          setDeleted(true);
+          setSelected(null);
+          resetOpenFile();
+        }
+      } catch (err) {
+        window.electron.sendAlert(`Unexpected error: ${err}`);
+      }
     },
   };
 
   const handleOpenFile = () => {
     setSelected(labelRef.current);
     if (isDirectory) {
-      setIsExpanded((prevIsExpanded) => !prevIsExpanded);
+      if (!(isRoot && isExpanded)) {
+        setIsExpanded((prevIsExpanded) => !prevIsExpanded);
+      }
     } else {
       setFileContents(data.contents);
       updateOnSave((newContents) => {
