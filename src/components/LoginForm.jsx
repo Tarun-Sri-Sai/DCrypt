@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { DIRECTORY_KEY } from "../constants";
+import InfoText from "./InfoText";
 
 const LoginForm = ({ onSuccess, children }) => {
   const [passwordInput, setPasswordInput] = useState("");
@@ -24,6 +25,7 @@ const LoginForm = ({ onSuccess, children }) => {
       onSubmit={handleSubmit}
       className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4"
     >
+      <InfoText message={localStorage.getItem(DIRECTORY_KEY)} />
       <div className="mb-2">
         <Input
           id="password"

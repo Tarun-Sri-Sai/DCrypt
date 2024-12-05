@@ -6,9 +6,10 @@ contextBridge.exposeInMainWorld("electron", {
   usePassword: (...args) => ipcRenderer.invoke("use-password", ...args),
   importVault: (...args) => ipcRenderer.invoke("import-vault", ...args),
   exportVault: (...args) => ipcRenderer.invoke("export-vault", ...args),
-  setVaultContents: (...args) => ipcRenderer.invoke("set-vault-contents", ...args),
-  getVaultContents: (...args) => ipcRenderer.invoke("get-vault-contents", ...args),
+  setVaultContents: (...args) => ipcRenderer.invoke("set-contents", ...args),
+  getVaultContents: (...args) => ipcRenderer.invoke("get-contents", ...args),
   sendAlert: (...args) => ipcRenderer.invoke("send-alert", ...args),
   sendInfo: (...args) => ipcRenderer.invoke("send-info", ...args),
   sendConfirm: (...args) => ipcRenderer.invoke("send-confirm", ...args),
+  reloadPage: (...args) => ipcRenderer.invoke("reload-page", ...args),
 });

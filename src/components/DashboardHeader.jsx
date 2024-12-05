@@ -4,10 +4,12 @@ import Button from "../components/Button";
 import Header from "./Header";
 import InfoText from "./InfoText";
 import { DIRECTORY_KEY, INFO_TIMEOUT } from "../constants";
+import { useDashboardContext } from "../contexts/DashboardContext";
 
 const DashboardHeader = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState("");
+  const { resetDirectory, resetOpenFile } = useDashboardContext();
 
   const updateInfo = (message) => {
     setInfo(message);
@@ -15,7 +17,7 @@ const DashboardHeader = () => {
   };
 
   const handleReset = () => {
-    localStorage.removeItem(DIRECTORY_KEY);
+    resetDirectory();
     navigate("/");
   };
 
@@ -32,13 +34,16 @@ const DashboardHeader = () => {
   };
 
   const handleImport = async () => {
-    const importResult = await window.electron.importVault();
+    const importResult = await window.electron.importVault(
+      localStorage.getItem(DIRECTORY_KEY),
+    );
     if (!importResult) {
       window.electron.sendAlert("Import failed");
       return;
     }
 
-    updateInfo("Vault data imported");
+    resetOpenFile();
+    window.electron.reloadPage();
   };
 
   return (

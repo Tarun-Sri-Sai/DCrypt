@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import ErrorBox from "./ErrorBox";
-import { useDcryptContext } from "../contexts/DcryptContext";
+import { useDashboardContext } from "../contexts/DashboardContext";
 import InfoText from "./InfoText";
 import { INFO_TIMEOUT } from "../constants";
 import ErrorText from "./ErrorText";
 
 const Editor = () => {
-  const { fileContents, onSave, openFileName } = useDcryptContext();
+  const { fileContents, onSave, openFileName } = useDashboardContext();
   const [content, setContent] = useState("");
   const [fileName, setFileName] = useState("");
   const [info, setInfo] = useState("");
@@ -55,9 +55,11 @@ const Editor = () => {
 
   return (
     <div className="p-2 md:p-4 text-2xs sm:text-xs md:text-sm lg:text-base flex flex-col h-full">
-      <h2 className="text-sm sm:text-base md:text-lg lg:text-xl mb-2">{openFileName}</h2>
+      <h2 className="text-sm sm:text-base md:text-lg lg:text-xl mb-2">
+        {openFileName}
+      </h2>
       <textarea
-        rows={10}
+        rows={20}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="flex-grow mb-2 p-2 border rounded font-mono"

@@ -1,44 +1,32 @@
 import ExplorerTree from "./ExplorerTree";
 
-const ExplorerContents = ({ data, updateParent }) => {
-  return data.contents.map((item, index) => {
-    const handleChildDelete = async () => {
-      const [confirmed, confirmError] = await window.electron.confirmDialog(
-        `Do you really want to delete ${item.name}?`
+const ExplorerContents = ({ path, data, setParentContents }) => {
+  return (
+    data &&
+    data.contents.map((item, index) => {
+      const handleChildDelete = async () => {
+        const confirmed = await window.electron.sendConfirm(
+          `Do you really want to delete ${item.name}?`,
+        );
+
+        if (!confirmed) {
+          return false;
+        }
+
+        const newContents = data.contents.filter((_, i) => i !== index);
+        await setParentContents("contents", newContents);
+        return true;
+      };
+
+      return (
+        <ExplorerTree
+          key={item.name}
+          path={[...path, "contents", index]}
+          handleDelete={handleChildDelete}
+        />
       );
-
-      if (confirmError) {
-        window.electron.sendAlert(confirmError);
-        return;
-      }
-
-      if (!confirmed) {
-        return false;
-      }
-
-      updateParent(
-        "contents",
-        data.contents.filter((_, i) => i !== index)
-      );
-      return true;
-    };
-
-    const updateChildsParent = (key, value) => {
-      const newContents = [...data.contents];
-      newContents[index] = { ...data.contents[index], [key]: value };
-      updateParent("contents", newContents);
-    };
-
-    return (
-      <ExplorerTree
-        key={item.name}
-        data={item}
-        handleDelete={handleChildDelete}
-        updateParent={updateChildsParent}
-        isRoot={false}
-      />
-    );
-  });
+    })
+  );
 };
 
 export default ExplorerContents;

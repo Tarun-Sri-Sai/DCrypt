@@ -8,10 +8,9 @@ const VaultLocation = () => {
 
   useEffect(() => {
     const getDirectory = async () => {
-      const [selectedDirectory, selectionError] =
-        await window.electron.selectDirectory();
+      const selectedDirectory = await window.electron.selectDirectory();
 
-      if (selectionError) {
+      if (!selectedDirectory) {
         window.electron.sendAlert("You need to select a directory to proceed.");
         await getDirectory();
         return;

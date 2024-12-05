@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import Error from "./components/Error";
 import Loader from "./components/Loader";
-import { DcryptProvider } from "./contexts/DcryptProvider";
 
 const VaultLocation = lazy(() => import("./pages/VaultLocation"));
 const Login = lazy(() => import("./pages/Login"));
@@ -27,11 +26,9 @@ const router = createHashRouter([
 
 const App = () => {
   return (
-    <DcryptProvider>
-      <Suspense fallback={<Loader message={"Loading page..."} />}>
-        <RouterProvider router={router} />
-      </Suspense>
-    </DcryptProvider>
+    <Suspense fallback={<Loader message={"Loading page..."} />}>
+      <RouterProvider router={router} />
+    </Suspense>
   );
 };
 

@@ -49,7 +49,7 @@ const ItemLabel = forwardRef(
         )}
       </>
     );
-  }
+  },
 );
 
 ItemLabel.displayName = "ItemLabel";
