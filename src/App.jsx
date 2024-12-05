@@ -6,7 +6,6 @@ import { DcryptProvider } from "./contexts/DcryptProvider";
 
 const VaultLocation = lazy(() => import("./pages/VaultLocation"));
 const Login = lazy(() => import("./pages/Login"));
-const Logout = lazy(() => import("./pages/Logout"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Root = lazy(() => import("./pages/Root"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -21,7 +20,6 @@ const router = createHashRouter([
       { path: "/vault-location", element: <VaultLocation /> },
       { path: "/login", element: <Login /> },
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/logout", element: <Logout /> },
       { path: "/signup", element: <Signup /> },
     ],
   },

@@ -67,9 +67,6 @@ const DashboardHeader = () => {
         <Button action="alternate" type="button" onClick={handleReset}>
           Reset Directory
         </Button>
-        <Button type="button" onClick={() => navigate("/logout")}>
-          Logout
-        </Button>
       </div>
     </div>
   );

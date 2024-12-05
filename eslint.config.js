@@ -7,7 +7,7 @@ const reactRefresh = require("eslint-plugin-react-refresh");
 module.exports = [
   { ignores: ["dist"] },
   {
-    files: ["**/*.{js,jsx}"],
+    files: ["src/**/*.jsx"],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -35,5 +35,17 @@ module.exports = [
       ],
       "react/prop-types": "off",
     },
+  },
+  {
+    files: ["electron/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+    rules: js.configs.recommended.rules,
   },
 ];
