@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "../components/Loader";
 import { Navigate } from "react-router-dom";
+import { DIRECTORY_KEY } from "../constants";
 
 const VaultLocation = () => {
-  const { updateDirectory } = useDcryptContext();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,12 +17,12 @@ const VaultLocation = () => {
         return;
       }
 
-      updateDirectory(selectedDirectory);
+      localStorage.setItem(DIRECTORY_KEY, selectedDirectory);
       setIsLoading(false);
     };
 
-    getDirectory();
-  }, []);
+    if (isLoading) getDirectory();
+  }, [isLoading]);
 
   return (
     <>

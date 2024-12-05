@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDcryptContext } from "../contexts/DcryptContext";
 import Loader from "../components/Loader";
 import LoginForm from "../components/LoginForm";
+import { DIRECTORY_KEY } from "../constants";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { directory, setPassword } = useDcryptContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkDirectoryAndVault = async () => {
+      const directory = localStorage.getItem(DIRECTORY_KEY);
       if (directory === null) {
         navigate("/vault-location");
         return;
       }
 
-      const [hasVault, checkError] = await window.electron.hasVault(directory);
-      if (checkError || !hasVault) {
+      const hasVaultFile = await window.electron.hasVaultFile(directory);
+      if (!hasVaultFile) {
         navigate("/signup");
         return;
       }
@@ -25,8 +25,8 @@ const Login = () => {
       setIsLoading(false);
     };
 
-    checkDirectoryAndVault();
-  }, [directory]);
+    if (isLoading) checkDirectoryAndVault();
+  }, [isLoading, navigate]);
 
   return (
     <>
@@ -34,8 +34,7 @@ const Login = () => {
         <Loader message={"Searching for the vault file. Please wait"} />
       ) : (
         <LoginForm
-          onSuccess={async (password) => {
-            setPassword(password);
+          onSuccess={async () => {
             navigate("/dashboard");
           }}
         >

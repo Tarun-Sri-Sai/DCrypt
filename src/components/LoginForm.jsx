@@ -1,35 +1,22 @@
 import { useState } from "react";
-import { useDcryptContext } from "../contexts/DcryptContext";
 import Input from "./Input";
 import Button from "./Button";
+import { DIRECTORY_KEY } from "../constants";
 
 const LoginForm = ({ onSuccess, children }) => {
   const [passwordInput, setPasswordInput] = useState("");
-  const { directory } = useDcryptContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const [hashedPassword, hashingError] = await window.electron.hashPassword(
-      passwordInput
-    );
-    if (hashingError) {
-      window.electron.sendAlert(`Unable to hash the password: ${hashingError}`);
-      return;
-    }
-
-    const [, decryptionError] = await window.electron.decryptVault(
-      directory,
-      hashedPassword
-    );
-
-    if (decryptionError) {
+    const directory = localStorage.getItem(DIRECTORY_KEY);
+    if (!(await window.electron.usePassword(directory, passwordInput))) {
       window.electron.sendAlert("Invalid password. Try again");
       setPasswordInput("");
       return;
     }
 
-    onSuccess(hashedPassword);
+    onSuccess();
   };
 
   return (

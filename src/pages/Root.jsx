@@ -1,10 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { useDcryptContext } from "../contexts/DcryptContext";
+import { DIRECTORY_KEY } from "../constants";
 
 const Root = () => {
-  const { directory } = useDcryptContext();
-
-  return directory === null ? (
+  return localStorage.getItem(DIRECTORY_KEY) === null ? (
     <Navigate to={"/vault-location"} />
   ) : (
     <Navigate to={"/login"} />

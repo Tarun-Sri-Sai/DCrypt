@@ -2,7 +2,7 @@ import { useState } from "react";
 import ErrorBox from "../components/ErrorBox";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { isValidPassword } from "../utils";
+import { DIRECTORY_KEY } from "../constants";
 
 const SignupForm = ({ onSuccess, children }) => {
   const [signupPassword, setSignupPassword] = useState("");
@@ -12,33 +12,21 @@ const SignupForm = ({ onSuccess, children }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isValidPassword(signupPassword)) {
-      setError("Password is too short");
-      setSignupPassword("");
-      setConfirmPassword("");
+    if (signupPassword !== confirmPassword) {
+      setError("Passwords don't match");
       return;
     }
 
-    if (signupPassword !== confirmPassword) {
-      setError("Passwords don't match");
-      setSignupPassword("");
-      setConfirmPassword("");
+    const directory = localStorage.getItem(DIRECTORY_KEY);
+    if (!(await window.electron.usePassword(directory, signupPassword))) {
+      setError("Password is too short or contains whitespace");
       return;
     }
 
     setSignupPassword("");
     setConfirmPassword("");
     setError(null);
-
-    const [hashedPassword, hashingError] = await window.electron.hashPassword(
-      signupPassword
-    );
-    if (hashingError) {
-      window.electron.sendAlert(`Unable to hash the password: ${hashingError}`);
-      return;
-    }
-
-    onSuccess(hashedPassword);
+    onSuccess();
   };
 
   return (

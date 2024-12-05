@@ -1,15 +1,14 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electron", {
-  selectDirectory: () => ipcRenderer.invoke("select-directory"),
-  hashPassword: (password) => ipcRenderer.invoke("hash-password", password),
-  decryptVault: (directory, password) =>
-    ipcRenderer.invoke("decrypt-vault", directory, password),
-  encryptVault: (vaultData, directory, password) =>
-    ipcRenderer.invoke("encrypt-vault", vaultData, directory, password),
-  hasVault: (directory) => ipcRenderer.invoke("has-vault", directory),
-  sendAlert: (message) => ipcRenderer.invoke("send-alert", message),
-  exportVault: (vaultData) => ipcRenderer.invoke("export-vault", vaultData),
-  importVault: () => ipcRenderer.invoke("import-vault"),
-  confirmDialog: (message) => ipcRenderer.invoke("confirm-dialog", message),
+  selectDirectory: (...args) => ipcRenderer.invoke("select-directory", ...args),
+  hasVaultFile: (...args) => ipcRenderer.invoke("has-vault-file", ...args),
+  usePassword: (...args) => ipcRenderer.invoke("use-password", ...args),
+  importVault: (...args) => ipcRenderer.invoke("import-vault", ...args),
+  exportVault: (...args) => ipcRenderer.invoke("export-vault", ...args),
+  setVaultContents: (...args) => ipcRenderer.invoke("set-vault-contents", ...args),
+  getVaultContents: (...args) => ipcRenderer.invoke("get-vault-contents", ...args),
+  sendAlert: (...args) => ipcRenderer.invoke("send-alert", ...args),
+  sendInfo: (...args) => ipcRenderer.invoke("send-info", ...args),
+  sendConfirm: (...args) => ipcRenderer.invoke("send-confirm", ...args),
 });

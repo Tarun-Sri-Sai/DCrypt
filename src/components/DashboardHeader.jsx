@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { useDcryptContext } from "../contexts/DcryptContext";
 import Header from "./Header";
 import InfoText from "./InfoText";
-import { INFO_TIMEOUT } from "../constants";
-import { isValidItem, sortRecursively } from "../utils";
+import { DIRECTORY_KEY, INFO_TIMEOUT } from "../constants";
 
 const DashboardHeader = () => {
   const navigate = useNavigate();
-  const { vault, resetDirectory, setVault } = useDcryptContext();
   const [info, setInfo] = useState("");
 
   const updateInfo = (message) => {
@@ -18,39 +15,30 @@ const DashboardHeader = () => {
   };
 
   const handleReset = () => {
-    resetDirectory();
+    localStorage.removeItem(DIRECTORY_KEY);
     navigate("/");
   };
 
   const handleExport = async () => {
-    window.electron.sendAlert(
-      "Make sure to delete the export file after using it"
-    );
-    const [exportFile, exportError] = await window.electron.exportVault(vault);
+    window.electron.sendInfo("Delete the unencrypted export file after use");
+    const exportFile = await window.electron.exportVault();
 
-    if (exportError) {
-      window.electron.sendAlert(exportError);
+    if (!exportFile) {
+      window.electron.sendAlert("Export failed");
       return;
     }
 
-    updateInfo(`Vault has been exported to ${exportFile}!`);
+    updateInfo(`Vault has been exported to ${exportFile}`);
   };
 
   const handleImport = async () => {
-    const [vaultData, importError] = await window.electron.importVault();
-
-    if (importError) {
-      window.electron.sendAlert(importError);
+    const importResult = await window.electron.importVault();
+    if (!importResult) {
+      window.electron.sendAlert("Import failed");
       return;
     }
 
-    if (!isValidItem(vaultData)) {
-      window.electron.sendAlert("Vault data is invalid");
-      return;
-    }
-
-    setVault(sortRecursively(vaultData));
-    updateInfo("Vault data imported!");
+    updateInfo("Vault data imported");
   };
 
   return (

@@ -6,14 +6,14 @@ const {
   REACT_INDEX_PATH,
 } = require("./constants.js");
 const { app, BrowserWindow, ipcMain } = require("electron");
+const { Vault } = require("./vault");
 
-let mainWindow;
-global.share = { ipcMain, mainWindow };
+global.share = { ipcMain, mainWindow: null, vault: new Vault() };
 
 require("./handlers.js");
 
 const createWindow = () => {
-  mainWindow = new BrowserWindow({
+  global.share.mainWindow = new BrowserWindow({
     ...DEFAULT_DIMS,
     webPreferences: {
       preload: PRELOAD_PATH,
@@ -24,9 +24,9 @@ const createWindow = () => {
   });
 
   if (IS_DEV) {
-    mainWindow.loadURL(REACT_DEV_URL);
+    global.share.mainWindow.loadURL(REACT_DEV_URL);
   } else {
-    mainWindow.loadFile(REACT_INDEX_PATH);
+    global.share.mainWindow.loadFile(REACT_INDEX_PATH);
   }
 };
 

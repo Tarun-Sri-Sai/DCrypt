@@ -54,7 +54,7 @@ const Editor = () => {
   }
 
   return (
-    <div className="p-2 md:p-4 text-2xs sm:text-xs md:text-sm lg:text-base flex flex-col">
+    <div className="p-2 md:p-4 text-2xs sm:text-xs md:text-sm lg:text-base flex flex-col h-full">
       <h2 className="text-sm sm:text-base md:text-lg lg:text-xl mb-2">{openFileName}</h2>
       <textarea
         rows={10}

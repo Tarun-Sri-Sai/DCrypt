@@ -1,59 +1,52 @@
 import { useState, useEffect } from "react";
 import ExplorerTree from "./ExplorerTree";
 import Editor from "./Editor";
-import { useDcryptContext } from "../contexts/DcryptContext";
-import Loader from "./Loader";
-import { isValidItem } from "../utils";
+import { DIRECTORY_KEY } from "../constants";
 
 const DashboardContents = () => {
-  const { vault, setVault, updateVault } = useDcryptContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const directory = localStorage.getItem(DIRECTORY_KEY);
+  const [data, setData] = useState(null);
 
-  const createStarterVault = () => {
-    setVault({ name: "My Vault", type: "directory", contents: [] });
-  };
-
-  useEffect(() => {
-    if (Object.keys(vault).length === 0) {
-      createStarterVault();
-    } else {
-      const isValid = isValidItem(vault);
-      if (!isValid) {
-        window.electron.sendAlert("Invalid vault, creating a starter vault");
-        createStarterVault();
-      }
-    }
-
-    setIsLoading(false);
-  }, [vault]);
-
-  const updateRoot = (key, value) => {
+  const updateRoot = async (key, value) => {
     if (key === "name" || key === "type") {
       return;
     }
 
-    updateVault(key, value);
+    const result = await window.electron.setVaultContents(
+      directory,
+      [],
+      key,
+      value
+    );
+    if (!result) {
+      window.electron.sendAlert("Failed to set vault contents");
+    }
   };
 
+  useEffect(() => {
+    const fetchVault = async () => {
+      const fetchedData = await window.electron.getVaultContents(directory, []);
+      setData(fetchedData);
+    };
+
+    fetchVault();
+  }, [directory]);
+
   return (
-    <>
-      {isLoading ? (
-        <Loader message={"Validating vault schema. Please wait"} />
-      ) : (
-        <div className="flex flex-row w-full">
-          <div className="w-1/3 md:w-29/100 lg:w-1/4 xl:45/200">
-            <ExplorerTree
-              updateParent={updateRoot}
-              data={vault}
-              handleDelete={null}
-            />
-          </div>
-          <div className="w-2/3 md:w-71/100 lg:w-3/4 xl:w-155/200">
-            <Editor />
-          </div>
+    data && (
+      <div className="flex flex-row w-full">
+        <div className="w-1/3 md:w-29/100 lg:w-1/4 xl:45/200">
+          <ExplorerTree
+            updateParent={updateRoot}
+            data={data}
+            handleDelete={null}
+          />
         </div>
-      )}
-    </>
+        <div className="w-2/3 md:w-71/100 lg:w-3/4 xl:w-155/200 h-full">
+          <Editor />
+        </div>
+      </div>
+    )
   );
 };
 
