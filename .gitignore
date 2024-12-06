@@ -13,6 +13,6 @@
 # logs
 npm-debug.log*
 
-# installers
-/DCryptInstaller/
-/DCryptInstaller.exe
+# electron
+/build
+DCryptInstaller.exe

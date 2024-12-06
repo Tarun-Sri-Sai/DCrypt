@@ -2,7 +2,7 @@
   "name": "dcrypt",
   "version": "2.0.1",
   "private": true,
-  "main": "electron/main.js",
+  "main": "main.js",
   "homepage": ".",
   "dependencies": {
     "cross-env": "^7.0.3",
@@ -16,7 +16,7 @@
     "react-watch": "vite",
     "react": "vite build",
     "electron-watch": "cross-env NODE_ENV=development npx nodemon",
-    "electron": "cross-env NODE_ENV=production electron .",
+    "electron": "cross-env NODE_ENV=production npx electron-packager . DCrypt --platform=win32 --arch=x64 --out=build --icon=assets/icon.ico --ignore=src --ignore=node_modules --ignore=assets",
     "format": "prettier --write ."
   },
   "devDependencies": {
@@ -26,6 +26,7 @@
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "electron": "^32.0.1",
+    "electron-packager": "^17.1.2",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",

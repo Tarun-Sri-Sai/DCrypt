@@ -4,13 +4,13 @@ const {
   IS_DEV,
   REACT_DEV_URL,
   REACT_INDEX_PATH,
-} = require("./constants.js");
+} = require("./electron/constants.js");
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { Vault } = require("./vault");
+const { Vault } = require("./electron/vault.js");
 
 global.share = { ipcMain, mainWindow: null, vault: new Vault() };
 
-require("./handlers.js");
+require("./electron/handlers.js");
 
 const createWindow = () => {
   global.share.mainWindow = new BrowserWindow({

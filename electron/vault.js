@@ -18,7 +18,7 @@ class Vault {
   #VAULT_FILE = ".dcryptvault";
 
   setPassword(password) {
-    if (this.#password !== null || !isValidPassword(password)) {
+    if (!isValidPassword(password)) {
       return false;
     }
 
