@@ -7,6 +7,7 @@ export const DashboardProvider = ({ children }) => {
   const [openFileName, setOpenFileName] = useState("");
   const [onSave, setOnSave] = useState(() => () => {});
   const [selected, setSelected] = useState(null);
+  const [isImported, setIsImported] = useState(false);
 
   const updateOnSave = useCallback((newOnSave) => {
     setOnSave(() => newOnSave);
@@ -37,6 +38,10 @@ export const DashboardProvider = ({ children }) => {
         resetOpenFile,
         selected,
         setSelected,
+        isImported,
+        onImport: () => setIsImported(true),
+        onHandleImport: () => setIsImported(false),
+        focusOnCreateInput: (ref) => setTimeout(() => ref.current?.focus(), 0),
       }}
     >
       {children}

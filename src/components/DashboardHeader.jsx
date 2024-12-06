@@ -9,7 +9,7 @@ import { useDashboardContext } from "../contexts/DashboardContext";
 const DashboardHeader = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState("");
-  const { resetDirectory, resetOpenFile } = useDashboardContext();
+  const { resetDirectory, resetOpenFile, onImport } = useDashboardContext();
 
   const updateInfo = (message) => {
     setInfo(message);
@@ -43,7 +43,8 @@ const DashboardHeader = () => {
     }
 
     resetOpenFile();
-    window.electron.reloadPage();
+    onImport();
+    updateInfo("Vault data imported");
   };
 
   return (

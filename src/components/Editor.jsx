@@ -59,11 +59,9 @@ const Editor = () => {
         {openFileName}
       </h2>
       <textarea
-        rows={20}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="flex-grow mb-2 p-2 border rounded font-mono"
-        style={{ width: "100%", height: "100%" }}
       />
       <ErrorText message={saveReminder} />
       <InfoText message={info} />

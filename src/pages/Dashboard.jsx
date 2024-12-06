@@ -5,8 +5,12 @@ import { DashboardProvider } from "../contexts/DashboardProvider";
 const Dashboard = () => {
   return (
     <DashboardProvider>
-      <DashboardHeader />
-      <DashboardContents />
+      <div className="h-screen flex flex-col">
+        <DashboardHeader />
+        <div className="flex-grow">
+          <DashboardContents />
+        </div>
+      </div>
     </DashboardProvider>
   );
 };

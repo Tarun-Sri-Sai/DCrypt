@@ -20,6 +20,7 @@ const ExplorerTree = ({ path, handleDelete }) => {
   const [isExpanded, setIsExpanded] = useState(isRoot);
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
+  const createInputRef = useRef(null);
   const {
     setFileContents,
     updateOnSave,
@@ -27,8 +28,10 @@ const ExplorerTree = ({ path, handleDelete }) => {
     resetOpenFile,
     selected,
     setSelected,
+    isImported,
+    onHandleImport,
+    focusOnCreateInput,
   } = useDashboardContext();
-  const createInputRef = useRef(null);
   const labelRef = useRef(null);
 
   const isDirectory = useCallback(
@@ -84,18 +87,14 @@ const ExplorerTree = ({ path, handleDelete }) => {
     setCreating("");
   };
 
-  const focusOnCreateInput = () => {
-    createInputRef.current?.focus();
-  };
-
   const handleCreateFile = () => {
     setCreating("file");
-    focusOnCreateInput();
+    focusOnCreateInput(createInputRef);
   };
 
   const handleCreateDirectory = () => {
     setCreating("directory");
-    focusOnCreateInput();
+    focusOnCreateInput(createInputRef);
   };
 
   const actionHandlers = {
@@ -140,6 +139,13 @@ const ExplorerTree = ({ path, handleDelete }) => {
       setOpenFileName(data.name);
     }
   };
+
+  useEffect(() => {
+    if (isImported) {
+      fetchVaultData();
+      onHandleImport();
+    }
+  }, [fetchVaultData, isImported, onHandleImport]);
 
   useEffect(() => {
     if (!deleted && !data) fetchVaultData();
