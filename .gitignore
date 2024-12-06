@@ -12,3 +12,7 @@
 
 # logs
 npm-debug.log*
+
+# installers
+/DCryptInstaller/
+/DCryptInstaller.exe
