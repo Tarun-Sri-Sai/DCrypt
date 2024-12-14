@@ -16,7 +16,7 @@
     "react-watch": "vite",
     "react": "vite build",
     "electron-watch": "cross-env NODE_ENV=development nodemon",
-    "electron": "cross-env NODE_ENV=production electron-packager . DCrypt --platform=win32 --arch=x64 --out=build --icon=assets/icon.ico --ignore=src --ignore=node_modules --ignore=assets",
+    "electron": "cross-env NODE_ENV=production electron-packager . DCrypt --platform=win32 --arch=x64 --out=build --icon=assets/icon.ico --ignore=src --ignore=node_modules",
     "format": "prettier --write ."
   },
   "devDependencies": {
