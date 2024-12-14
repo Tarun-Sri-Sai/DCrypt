@@ -1,9 +1,9 @@
 import IconButton from "./IconButton";
-import { FaFileCirclePlus as CreateFileIcon } from "react-icons/fa6";
 import {
-  MdCreateNewFolder as CreateDirectoryIcon,
-  MdDeleteForever as DeleteIcon,
-} from "react-icons/md";
+  FaPlus as CreateFileIcon,
+  FaFolderPlus as CreateDirectoryIcon,
+} from "react-icons/fa";
+import { ImCross as DeleteIcon } from "react-icons/im";
 
 const ItemActions = ({
   handleCreateFile,
@@ -17,7 +17,7 @@ const ItemActions = ({
       {showCreateIcons && (
         <>
           <IconButton action={"alternate"} onClick={handleCreateFile}>
-            <CreateFileIcon size={"0.8em"} />
+            <CreateFileIcon />
           </IconButton>
           <IconButton action={"alternate"} onClick={handleCreateDirectory}>
             <CreateDirectoryIcon />
@@ -26,7 +26,7 @@ const ItemActions = ({
       )}
       {!isRoot && (
         <IconButton action={"cancel"} onClick={() => handleDelete()}>
-          <DeleteIcon />
+          <DeleteIcon size={"0.9em"} />
         </IconButton>
       )}
     </div>

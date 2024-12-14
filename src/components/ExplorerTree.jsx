@@ -164,14 +164,14 @@ const ExplorerTree = ({ path, handleDelete }) => {
                   onClick={() => setIsExpanded((prev) => !prev)}
                 >
                   {isExpanded ? (
-                    <ExpandedIcon size={"0.8em"} />
+                    <ExpandedIcon size={"0.9em"} />
                   ) : (
-                    <CollapsedIcon size={"0.8em"} />
+                    <CollapsedIcon size={"0.9em"} />
                   )}
                 </IconButton>
               ) : (
                 <IconButton action="alternate">
-                  <FileIcon size={"0.8em"} />
+                  <FileIcon size={"0.9em"} />
                 </IconButton>
               ))}
             <ItemLabel
