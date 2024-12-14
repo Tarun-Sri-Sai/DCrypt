@@ -41,7 +41,7 @@ export const DashboardProvider = ({ children }) => {
         isImported,
         onImport: () => setIsImported(true),
         onHandleImport: () => setIsImported(false),
-        focusOnCreateInput: (ref) => setTimeout(() => ref.current?.focus(), 0),
+        focusOnInlineInput: (ref) => ref.current?.focus(),
       }}
     >
       {children}
