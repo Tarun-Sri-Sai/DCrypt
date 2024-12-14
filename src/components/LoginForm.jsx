@@ -29,9 +29,8 @@ const LoginForm = ({ onSuccess, children }) => {
       <div className="mb-2">
         <Input
           id="password"
-          label={"Enter the master password"}
+          label={"Master password"}
           type="password"
-          placeholder="••••••••••"
           onChange={(e) => setPasswordInput(e.target.value)}
           value={passwordInput}
         />

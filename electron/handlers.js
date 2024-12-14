@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { EXPORT_FILE_PREFIX } = require("./constants");
 const { getCurrentTime } = require("./utils/datetime");
+const { formatPath } = require("./utils/files");
 
 module.exports = {
   selectDirectory: global.share.ipcMain.handle("select-directory", async () => {
@@ -59,7 +60,7 @@ module.exports = {
       const vaultData = global.share.vault.getContents([]);
 
       fs.writeFileSync(exportFile, JSON.stringify(vaultData));
-      return exportFile;
+      return formatPath(result.filePaths[0]);
     } catch {
       return null;
     }

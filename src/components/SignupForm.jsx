@@ -36,10 +36,9 @@ const SignupForm = ({ onSuccess, children }) => {
     >
       <div className="mb-2">
         <Input
-          label={"Enter a strong master password"}
+          label={"New master password"}
           id={"signupPassword"}
           type="password"
-          placeholder="••••••••••"
           onChange={(e) => setSignupPassword(e.target.value)}
           value={signupPassword}
         />
@@ -47,10 +46,9 @@ const SignupForm = ({ onSuccess, children }) => {
 
       <div className="mb-2">
         <Input
-          label={"Re-enter the master password"}
+          label={"Confirm password"}
           id={"confirmPassword"}
           type="password"
-          placeholder="••••••••••"
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmPassword}
         />

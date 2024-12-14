@@ -7,4 +7,5 @@ DCrypt is a GUI-based secrets manager built with Electron. It locally encrypts a
 ## Requirements
 
 This project requires the following software:
+
 - node:22

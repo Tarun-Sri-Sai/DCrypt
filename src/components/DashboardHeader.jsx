@@ -48,7 +48,7 @@ const DashboardHeader = () => {
   };
 
   return (
-    <div className="flex flex-row items-center justify-between p-1 sm:p-2">
+    <div className="flex flex-row items-center justify-between p-1 sm:p-2 max-h-[10vh]">
       <Header>Dashboard</Header>
       <InfoText className="flex w-full text-center" message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">

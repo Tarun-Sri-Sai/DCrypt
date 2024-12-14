@@ -8,7 +8,7 @@ const Button = ({ children, action = "primary", ...buttonProps }) => {
 
   return (
     <button
-      className={`py-0.75 sm:py-1 md:py-1.25 lg:py-1.5 px-1.5 sm:px-2 md:px-2.5 lg:px-3 text-2xs sm:text-xs md:text-sm lg:text-base rounded-md md:rounded-lg hover:drop-shadow-2xl ${buttonPalettes[action]}`}
+      className={`py-0.75 sm:py-1 md:py-1.25 lg:py-1.5 px-2 sm:px-2.5 md:px-3 lg:px-3.5 text-3xs sm:text-2xs md:text-xs lg:text-sm xl:text-base rounded-[1.125rem] hover:drop-shadow-2xl ${buttonPalettes[action]}`}
       {...buttonProps}
     >
       {children}
