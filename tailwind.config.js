@@ -5,8 +5,10 @@ module.exports = {
     extend: {
       fontSize: {
         "2xs": "0.625rem",
-        "3xs": "0.5rem",
       },
+      lineHeight: {
+        "2xs": "0.75rem",
+      }
     },
   },
   plugins: [],

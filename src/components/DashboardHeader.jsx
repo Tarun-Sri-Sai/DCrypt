@@ -52,13 +52,13 @@ const DashboardHeader = () => {
       <Header>Dashboard</Header>
       <InfoText className="flex w-full text-center" message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
-        <Button action="alternate" type="button" onClick={handleImport}>
+        <Button action="primary" type="button" onClick={handleImport}>
           Import Vault
         </Button>
-        <Button action="alternate" type="button" onClick={handleExport}>
+        <Button action="primary" type="button" onClick={handleExport}>
           Export Vault
         </Button>
-        <Button action="alternate" type="button" onClick={handleReset}>
+        <Button action="primary" type="button" onClick={handleReset}>
           Reset Directory
         </Button>
       </div>
