@@ -8,7 +8,7 @@ module.exports = {
       },
       lineHeight: {
         "2xs": "0.75rem",
-      }
+      },
     },
   },
   plugins: [],
