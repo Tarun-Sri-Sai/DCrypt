@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkDirectoryAndVault = async () => {
+    const checkVault = async () => {
       const directory = localStorage.getItem(DIRECTORY_KEY);
       if (directory === null) {
         navigate("/vault-location");
@@ -25,21 +25,21 @@ const Login = () => {
       setIsLoading(false);
     };
 
-    if (isLoading) checkDirectoryAndVault();
+    if (isLoading) {
+      checkVault();
+    }
   }, [isLoading, navigate]);
 
   return (
     <>
       {isLoading ? (
-        <Loader message={"Searching for the vault file. Please wait"} />
+        <Loader message={"Searching for the vault file. Please wait..."} />
       ) : (
         <LoginForm
           onSuccess={async () => {
             navigate("/dashboard");
           }}
-        >
-          Go to vault
-        </LoginForm>
+        />
       )}
     </>
   );

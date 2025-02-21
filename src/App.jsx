@@ -1,13 +1,11 @@
-import { Suspense, lazy } from "react";
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import Error from "./components/Error";
 import Loader from "./components/Loader";
-
-const VaultLocation = lazy(() => import("./pages/VaultLocation"));
-const Login = lazy(() => import("./pages/Login"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Root = lazy(() => import("./pages/Root"));
-const Signup = lazy(() => import("./pages/Signup"));
+import VaultLocation from "./pages/VaultLocation";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Signup from "./pages/Signup";
+import { DIRECTORY_KEY } from "./constants";
 
 const router = createHashRouter([
   {
@@ -15,7 +13,15 @@ const router = createHashRouter([
     element: <Outlet />,
     errorElement: <Error message={"Page not found"} />,
     children: [
-      { index: true, element: <Root /> },
+      {
+        index: true,
+        element:
+          localStorage.getItem(DIRECTORY_KEY) === null ? (
+            <VaultLocation />
+          ) : (
+            <Signup />
+          ),
+      },
       { path: "/vault-location", element: <VaultLocation /> },
       { path: "/login", element: <Login /> },
       { path: "/dashboard", element: <Dashboard /> },
@@ -26,9 +32,10 @@ const router = createHashRouter([
 
 const App = () => {
   return (
-    <Suspense fallback={<Loader message={"Loading page..."} />}>
-      <RouterProvider router={router} />
-    </Suspense>
+    <RouterProvider
+      fallbackElement={<Loader message={"Loading page..."} />}
+      router={router}
+    />
   );
 };
 

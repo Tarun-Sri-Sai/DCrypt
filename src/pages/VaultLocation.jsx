@@ -28,7 +28,7 @@ const VaultLocation = () => {
       {isLoading ? (
         <Loader
           message={
-            "Select a directory from the dialog. This is where the vault will be stored"
+            "Select a directory from the dialog. This is where the vault will be stored."
           }
         />
       ) : (

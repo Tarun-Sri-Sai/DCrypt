@@ -4,7 +4,7 @@ import Button from "./Button";
 import { DIRECTORY_KEY } from "../constants";
 import Label from "./Label";
 
-const LoginForm = ({ onSuccess, children }) => {
+const LoginForm = ({ onSuccess }) => {
   const [passwordInput, setPasswordInput] = useState("");
 
   const handleSubmit = async (e) => {
@@ -39,7 +39,7 @@ const LoginForm = ({ onSuccess, children }) => {
           />
         </div>
         <div className="mb-2">
-          <Button type="submit">{children}</Button>
+          <Button type="submit">Go to vault</Button>
         </div>
       </form>
     </div>

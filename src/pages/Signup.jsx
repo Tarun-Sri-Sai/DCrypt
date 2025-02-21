@@ -9,7 +9,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkDirectoryAndVault = async () => {
+    const checkVault = async () => {
       const directory = localStorage.getItem(DIRECTORY_KEY);
       if (directory === null) {
         navigate("/vault-location");
@@ -21,24 +21,25 @@ const Signup = () => {
         navigate("/login");
         return;
       }
+
       setIsLoading(false);
     };
 
-    if (isLoading) checkDirectoryAndVault();
+    if (isLoading) {
+      checkVault();
+    }
   }, [isLoading, navigate]);
 
   return (
     <>
       {isLoading ? (
-        <Loader message={"Checking for existing vault file. Please wait"} />
+        <Loader message={"Checking for existing vault file. Please wait..."} />
       ) : (
         <SignupForm
           onSuccess={() => {
             navigate("/dashboard");
           }}
-        >
-          Create vault
-        </SignupForm>
+        />
       )}
     </>
   );

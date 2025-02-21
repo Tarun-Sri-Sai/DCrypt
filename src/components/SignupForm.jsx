@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import { DIRECTORY_KEY } from "../constants";
 import Label from "./Label";
 
-const SignupForm = ({ onSuccess, children }) => {
+const SignupForm = ({ onSuccess }) => {
   const [signupPassword, setSignupPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
@@ -64,7 +64,7 @@ const SignupForm = ({ onSuccess, children }) => {
         </div>
 
         <div className="mb-2">
-          <Button type="submit">{children}</Button>
+          <Button type="submit">Create vault</Button>
         </div>
       </form>
     </div>
