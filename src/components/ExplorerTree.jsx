@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import ItemLabel from "./ItemLabel";
 import InlineInput from "./InlineInput";
 import ItemActions from "./ItemActions";
@@ -21,13 +21,8 @@ const ExplorerTree = ({ path, handleDelete }) => {
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
   const createInputRef = useRef(null);
-  const {
-    setFileContext,
-    selected,
-    setSelected,
-    refreshed,
-    setRefreshed,
-  } = useDashboardContext();
+  const { setFileContext, selected, setSelected, refreshed, setRefreshed } =
+    useDashboardContext();
   const labelRef = useRef(null);
 
   const isDirectory = useCallback(
@@ -137,7 +132,7 @@ const ExplorerTree = ({ path, handleDelete }) => {
 
           await fetchVaultData();
         },
-        name: data.name
+        name: data.name,
       }));
     }
   };
