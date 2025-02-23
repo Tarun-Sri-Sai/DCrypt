@@ -9,7 +9,7 @@ import { useDashboardContext } from "../contexts/DashboardContext";
 const DashboardHeader = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState("");
-  const { resetDirectory, resetOpenFile, onImport } = useDashboardContext();
+  const { setRefreshed, setFileContext, setSelected } = useDashboardContext();
 
   const updateInfo = (message) => {
     setInfo(message);
@@ -17,7 +17,14 @@ const DashboardHeader = () => {
   };
 
   const handleReset = () => {
-    resetDirectory();
+    localStorage.removeItem(DIRECTORY_KEY);
+    setFileContext((prevContext) => ({
+      ...prevContext,
+      contents: "",
+      name: "",
+      onSave: () => {},
+    }));
+    setSelected(null);
     navigate("/");
   };
 
@@ -42,8 +49,14 @@ const DashboardHeader = () => {
       return;
     }
 
-    resetOpenFile();
-    onImport();
+    setFileContext((prevContext) => ({
+      ...prevContext,
+      contents: "",
+      name: "",
+      onSave: () => {},
+    }));
+    setSelected(null);
+    setRefreshed(true);
     updateInfo("Vault data imported");
   };
 

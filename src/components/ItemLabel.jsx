@@ -1,13 +1,11 @@
-import { forwardRef, useState, useRef, useEffect } from "react";
+import { forwardRef, useState, useRef } from "react";
 import InlineInput from "./InlineInput";
 import { isValidName } from "../utils";
-import { useDashboardContext } from "../contexts/DashboardContext";
 
 const ItemLabel = forwardRef(
   ({ text, renameText, onClick, highlight }, ref) => {
     const [renaming, setRenaming] = useState(false);
     const renameInputRef = useRef(null);
-    const { focusOnInlineInput } = useDashboardContext();
 
     const handleSubmit = (newText) => {
       if (isValidName(newText)) {
@@ -21,17 +19,14 @@ const ItemLabel = forwardRef(
       setRenaming((prev) => !prev);
     };
 
-    useEffect(() => {
-      if (renaming && renameInputRef.current) {
-        focusOnInlineInput(renameInputRef);
-      }
-    }, [focusOnInlineInput, renaming]);
-
     return (
       <>
         {renaming ? (
           <InlineInput
-            ref={renameInputRef}
+            ref={(el) => {
+              renameInputRef.current = el;
+              el && el.focus();
+            }}
             handleSubmit={handleSubmit}
             initialText={text}
           />

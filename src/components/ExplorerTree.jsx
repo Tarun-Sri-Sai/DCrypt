@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import ItemLabel from "./ItemLabel";
 import InlineInput from "./InlineInput";
 import ItemActions from "./ItemActions";
@@ -22,15 +22,11 @@ const ExplorerTree = ({ path, handleDelete }) => {
   const [deleted, setDeleted] = useState(false);
   const createInputRef = useRef(null);
   const {
-    setFileContents,
-    updateOnSave,
-    setOpenFileName,
-    resetOpenFile,
+    setFileContext,
     selected,
     setSelected,
-    isImported,
-    onHandleImport,
-    focusOnInlineInput,
+    refreshed,
+    setRefreshed,
   } = useDashboardContext();
   const labelRef = useRef(null);
 
@@ -104,7 +100,12 @@ const ExplorerTree = ({ path, handleDelete }) => {
         if (result) {
           setDeleted(true);
           setSelected(null);
-          resetOpenFile();
+          setFileContext((prevContext) => ({
+            ...prevContext,
+            contents: "",
+            name: "",
+            onSave: () => {},
+          }));
         }
       } catch (err) {
         window.electron.sendAlert(`Unexpected error: ${err}`);
@@ -119,41 +120,40 @@ const ExplorerTree = ({ path, handleDelete }) => {
         setIsExpanded((prevIsExpanded) => !prevIsExpanded);
       }
     } else {
-      setFileContents(data.contents);
-      updateOnSave(async (newContents) => {
-        const result = await window.electron.setVaultContents(
-          directory,
-          path,
-          "contents",
-          newContents,
-        );
-        if (!result) {
-          window.electron.sendAlert("Failed to set vault contents");
-          return;
-        }
+      setFileContext((prevContext) => ({
+        ...prevContext,
+        contents: data.contents,
+        onSave: async (newContents) => {
+          const result = await window.electron.setVaultContents(
+            directory,
+            path,
+            "contents",
+            newContents,
+          );
+          if (!result) {
+            window.electron.sendAlert("Failed to set vault contents");
+            return;
+          }
 
-        await fetchVaultData();
-      });
-      setOpenFileName(data.name);
+          await fetchVaultData();
+        },
+        name: data.name
+      }));
     }
   };
 
+  // useEffect needs to be used otherwise this will render while DashboardContext is updating
   useEffect(() => {
-    if (isImported) {
+    if (refreshed) {
+      setIsExpanded(false);
       fetchVaultData();
-      onHandleImport();
+      setRefreshed(false);
     }
-  }, [fetchVaultData, isImported, onHandleImport]);
+  }, [refreshed, fetchVaultData, setRefreshed]);
 
-  useEffect(() => {
-    if (!deleted && !data) fetchVaultData();
-  }, [data, deleted, directory, fetchVaultData]);
-
-  useEffect(() => {
-    if (creating && createInputRef.current) {
-      focusOnInlineInput(createInputRef);
-    }
-  }, [creating, focusOnInlineInput]);
+  if (!deleted && !data) {
+    fetchVaultData();
+  }
 
   return (
     !deleted &&
@@ -211,7 +211,13 @@ const ExplorerTree = ({ path, handleDelete }) => {
         </div>
         <div className="pl-1.5 md:pl-2.25 lg:pl-3 xl:pl-3.75">
           {creating && (
-            <InlineInput ref={createInputRef} handleSubmit={handleSubmit} />
+            <InlineInput
+              ref={(el) => {
+                createInputRef.current = el;
+                el && el.focus();
+              }}
+              handleSubmit={handleSubmit}
+            />
           )}
           {isDirectory() && isExpanded && (
             <ExplorerContents
