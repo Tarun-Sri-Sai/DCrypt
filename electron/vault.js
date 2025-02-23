@@ -32,10 +32,10 @@ class Vault {
     return fs.existsSync(filePath);
   }
 
-  unlock(directory) {
+  unlock(directory, invalidate = false) {
     if (directory !== this.#directory) {
       this.#directory = directory;
-    } else if (this.#data !== null) {
+    } else if (!invalidate && this.#data !== null) {
       return true;
     }
 

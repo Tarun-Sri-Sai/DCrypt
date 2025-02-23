@@ -26,6 +26,10 @@ module.exports = {
       global.share.vault.unlock(directory),
   ),
 
+  refresh: global.share.ipcMain.handle("refresh", async (_, directory) =>
+    global.share.vault.unlock(directory, true),
+  ),
+
   importVault: global.share.ipcMain.handle(
     "import-vault",
     async (_, directory) => {
@@ -109,8 +113,4 @@ module.exports = {
       return !result.canceled && result.response === 0;
     },
   ),
-
-  reloadPage: global.share.ipcMain.handle("reload-page", () => {
-    if (global.share.mainWindow) global.share.mainWindow.reload();
-  }),
 };

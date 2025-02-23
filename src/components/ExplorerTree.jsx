@@ -20,7 +20,6 @@ const ExplorerTree = ({ path, handleDelete }) => {
   const [isExpanded, setIsExpanded] = useState(isRoot);
   const [creating, setCreating] = useState("");
   const [deleted, setDeleted] = useState(false);
-  const createInputRef = useRef(null);
   const { setFileContext, selected, setSelected, refreshed, setRefreshed } =
     useDashboardContext();
   const labelRef = useRef(null);
@@ -31,6 +30,9 @@ const ExplorerTree = ({ path, handleDelete }) => {
   );
 
   const fetchVaultData = useCallback(async () => {
+    if (refreshed) {
+      await window.electron.refresh(directory);
+    }
     const fetchedData = await window.electron.getVaultContents(path);
     setData(fetchedData);
   }, [path]);
@@ -207,10 +209,7 @@ const ExplorerTree = ({ path, handleDelete }) => {
         <div className="pl-1.5 md:pl-2.25 lg:pl-3 xl:pl-3.75">
           {creating && (
             <InlineInput
-              ref={(el) => {
-                createInputRef.current = el;
-                el && el.focus();
-              }}
+              ref={(el) => setTimeout(() => el && el.focus(), 0)}
               handleSubmit={handleSubmit}
             />
           )}

@@ -1,11 +1,10 @@
-import { forwardRef, useState, useRef } from "react";
+import { forwardRef, useState } from "react";
 import InlineInput from "./InlineInput";
 import { isValidName } from "../utils";
 
 const ItemLabel = forwardRef(
   ({ text, renameText, onClick, highlight }, ref) => {
     const [renaming, setRenaming] = useState(false);
-    const renameInputRef = useRef(null);
 
     const handleSubmit = (newText) => {
       if (isValidName(newText)) {
@@ -16,17 +15,14 @@ const ItemLabel = forwardRef(
     };
 
     const handleRenaming = () => {
-      setRenaming((prev) => !prev);
+      setRenaming(true);
     };
 
     return (
       <>
         {renaming ? (
           <InlineInput
-            ref={(el) => {
-              renameInputRef.current = el;
-              el && el.focus();
-            }}
+            ref={(el) => setTimeout(() => el && el.focus(), 0)}
             handleSubmit={handleSubmit}
             initialText={text}
           />
