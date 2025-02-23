@@ -15,4 +15,4 @@ npm-debug.log*
 
 # electron
 /build
-DCryptInstaller.exe
+*.exe
