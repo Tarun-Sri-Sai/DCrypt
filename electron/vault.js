@@ -16,6 +16,7 @@ class Vault {
     contents: [],
   };
   #VAULT_FILE = ".dcryptvault";
+  #directory = "";
 
   setPassword(password) {
     if (!isValidPassword(password)) {
@@ -32,7 +33,11 @@ class Vault {
   }
 
   unlock(directory) {
-    if (this.#data !== null) return true;
+    if (directory !== this.#directory) {
+      this.#directory = directory;
+    } else if (this.#data !== null) {
+      return true;
+    }
 
     if (!this.hasVaultFile(directory)) {
       this.set(directory, this.#DEFAULT_DATA);
