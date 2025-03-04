@@ -1,24 +1,47 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { DIRECTORY_KEY } from "../constants";
 import { DashboardContext } from "./DashboardContext";
 
 export const DashboardProvider = ({ children }) => {
-  const [fileContext, setFileContext] = useState({
-    contents: "",
-    name: "",
-    onSave: () => {},
-  });
+  const [fileContents, setFileContents] = useState("");
+  const [openFileName, setOpenFileName] = useState("");
+  const [onSave, setOnSave] = useState(() => () => {});
   const [selected, setSelected] = useState(null);
-  const [refreshed, setRefreshed] = useState(false);
+  const [isImported, setIsImported] = useState(false);
+
+  const updateOnSave = useCallback((newOnSave) => {
+    setOnSave(() => newOnSave);
+  }, []);
+
+  const resetDirectory = () => {
+    localStorage.removeItem(DIRECTORY_KEY);
+    resetOpenFile();
+  };
+
+  const resetOpenFile = () => {
+    setFileContents("");
+    setOpenFileName("");
+    updateOnSave(() => {});
+    setSelected(null);
+  };
 
   return (
     <DashboardContext.Provider
       value={{
-        fileContext,
-        setFileContext,
+        resetDirectory,
+        fileContents,
+        setFileContents,
+        onSave,
+        updateOnSave,
+        openFileName,
+        setOpenFileName,
+        resetOpenFile,
         selected,
         setSelected,
-        refreshed,
-        setRefreshed,
+        isImported,
+        onImport: () => setIsImported(true),
+        onHandleImport: () => setIsImported(false),
+        focusOnInlineInput: (ref) => ref.current?.focus(),
       }}
     >
       {children}

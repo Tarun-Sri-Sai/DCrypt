@@ -11,7 +11,7 @@ import { FaRotate as RefreshIcon } from "react-icons/fa6";
 const DashboardHeader = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState("");
-  const { setRefreshed, setFileContext, setSelected } = useDashboardContext();
+  const { resetDirectory, resetOpenFile, onImport } = useDashboardContext();
 
   const updateInfo = (message) => {
     setInfo(message);
@@ -19,14 +19,7 @@ const DashboardHeader = () => {
   };
 
   const handleReset = () => {
-    localStorage.removeItem(DIRECTORY_KEY);
-    setFileContext((prevContext) => ({
-      ...prevContext,
-      contents: "",
-      name: "",
-      onSave: () => {},
-    }));
-    setSelected(null);
+    resetDirectory();
     navigate("/");
   };
 
@@ -51,14 +44,8 @@ const DashboardHeader = () => {
       return;
     }
 
-    setFileContext((prevContext) => ({
-      ...prevContext,
-      contents: "",
-      name: "",
-      onSave: () => {},
-    }));
-    setSelected(null);
-    setRefreshed(true);
+    resetOpenFile();
+    onImport();
     updateInfo("Vault data imported");
   };
 
