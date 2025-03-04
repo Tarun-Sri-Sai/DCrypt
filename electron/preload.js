@@ -11,5 +11,4 @@ contextBridge.exposeInMainWorld("electron", {
   sendAlert: (...args) => ipcRenderer.invoke("send-alert", ...args),
   sendInfo: (...args) => ipcRenderer.invoke("send-info", ...args),
   sendConfirm: (...args) => ipcRenderer.invoke("send-confirm", ...args),
-  refresh: (...args) => ipcRenderer.invoke("refresh", ...args),
 });

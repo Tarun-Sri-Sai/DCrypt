@@ -40,9 +40,6 @@ const ExplorerTree = ({ path, handleDelete }) => {
   );
 
   const fetchVaultData = useCallback(async () => {
-    if (refreshed) {
-      await window.electron.refresh(directory);
-    }
     const fetchedData = await window.electron.getVaultContents(path);
     setData(fetchedData);
   }, [path]);

@@ -26,10 +26,6 @@ module.exports = {
       global.share.vault.unlock(directory),
   ),
 
-  refresh: global.share.ipcMain.handle("refresh", async (_, directory) =>
-    global.share.vault.unlock(directory, true),
-  ),
-
   importVault: global.share.ipcMain.handle(
     "import-vault",
     async (_, directory) => {
