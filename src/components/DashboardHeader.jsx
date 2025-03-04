@@ -5,8 +5,6 @@ import Header from "./Header";
 import InfoText from "./InfoText";
 import { DIRECTORY_KEY, INFO_TIMEOUT } from "../constants";
 import { useDashboardContext } from "../contexts/DashboardContext";
-import IconButton from "./IconButton";
-import { FaRotate as RefreshIcon } from "react-icons/fa6";
 
 const DashboardHeader = () => {
   const navigate = useNavigate();
@@ -54,21 +52,6 @@ const DashboardHeader = () => {
       <Header>Dashboard</Header>
       <InfoText className="flex w-full text-center" message={info} />
       <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
-        <IconButton
-          action="alternate"
-          onClick={() => {
-            setFileContext((prevContext) => ({
-              ...prevContext,
-              contents: "",
-              name: "",
-              onSave: () => {},
-            }));
-            setSelected(null);
-            setRefreshed(true);
-          }}
-        >
-          <RefreshIcon size={"1.2rem"} />
-        </IconButton>
         <Button type="button" onClick={handleImport}>
           Import Vault
         </Button>
