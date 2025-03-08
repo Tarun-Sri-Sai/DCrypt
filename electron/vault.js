@@ -1,119 +1,79 @@
 const fs = require("fs");
 const path = require("path");
 const { decryptData, encryptData } = require("./utils/encryption");
-const {
-  isValid,
-  sortRecursively,
-  isValidPassword,
-} = require("./utils/validation");
+const { isValidPassword } = require("./utils/validation");
+const { VAULT_DIRECTORY } = require("./constants");
+
+class VaultReadError extends Error {}
+
+class VaultWriteError extends Error {}
+
+class VaultDataError extends Error {}
 
 class Vault {
-  #data = null;
-  #password = null;
-  #DEFAULT_DATA = {
-    name: "My Vault",
-    type: "directory",
-    contents: [],
-  };
-  #VAULT_FILE = ".dcryptvault";
+  #password = "";
   #directory = "";
 
-  setPassword(password) {
+  constructor(parentDirectory, password) {
     if (!isValidPassword(password)) {
-      return false;
+      throw new VaultDataError("Password is too weak.");
+    }
+
+    if (!fs.statSync(parentDirectory).isDirectory()) {
+      throw new VaultDataError(`${parentDirectory} is not a valid directory.`);
     }
 
     this.#password = password;
-    return true;
+    this.#directory = path.join(parentDirectory, VAULT_DIRECTORY);
   }
 
-  hasVaultFile(directory) {
-    const filePath = path.join(directory, this.#VAULT_FILE);
-    return fs.existsSync(filePath);
-  }
+  read(relativePath = []) {
+    const itemPath = path.join(this.#directory, ...relativePath);
+    const itemStat = fs.statSync(itemPath);
 
-  unlock(directory, invalidate = false) {
-    if (directory !== this.#directory) {
-      this.#directory = directory;
-    } else if (!invalidate && this.#data !== null) {
-      return true;
+    try {
+      if (itemStat.isFile()) {
+        const fileData = fs.readFileSync(itemPath, { encoding: "utf-8" });
+        const decrypted = decryptData(fileData, this.#password);
+        return [
+          {
+            name: path.basename(itemPath),
+            isDirectory: false,
+            contents: JSON.parse(decrypted),
+          },
+        ];
+      }
+
+      if (itemStat.isDirectory()) {
+        const result = [];
+        for (const childItem of fs.readdirSync(itemPath)) {
+          result.push(childItem);
+        }
+        return result;
+      }
+    } catch (err) {
+      throw new VaultReadError(err);
     }
 
-    if (!this.hasVaultFile(directory)) {
-      this.set(directory, this.#DEFAULT_DATA);
-      return true;
+    throw new VaultReadError(`${itemPath} is not a valid path.`);
+  }
+
+  write(relativePath = [], contents) {
+    const itemPath = path.join(this.#directory, relativePath);
+
+    const parentPath = path.dirname(itemPath);
+    if (!fs.statSync(parentPath).isDirectory()) {
+      fs.mkdirSync(parentPath, { recursive: true });
     }
 
     try {
-      const filePath = path.join(directory, this.#VAULT_FILE);
-      const fileData = fs.readFileSync(filePath, "utf8");
-
-      const dataString = decryptData(fileData, this.#password);
-      const data = JSON.parse(dataString);
-      if (!isValid(data)) {
-        this.set(directory, this.#DEFAULT_DATA);
-        return false;
-      }
-
-      this.set(directory, data);
-      return true;
-    } catch {
-      return false;
+      const plainText = JSON.stringify(contents);
+      const encrypted = encryptData(plainText, this.#password);
+      fs.writeFileSync(itemPath, encrypted, { encoding: "utf-8" });
+    } catch (err) {
+      throw new VaultWriteError(err);
     }
-  }
-
-  set(directory, data) {
-    if (!isValid(data)) {
-      return false;
-    }
-
-    this.#data = sortRecursively(data);
-    this.#writeToFile(directory);
-    return true;
-  }
-
-  getContents(pathArray) {
-    try {
-      let currentContents = this.#data;
-      for (const pathItem of pathArray) {
-        currentContents = currentContents[pathItem];
-      }
-
-      return currentContents;
-    } catch {
-      return null;
-    }
-  }
-
-  setContents(directory, pathArray, key, value) {
-    try {
-      let currentContents = this.#data;
-      for (const pathItem of pathArray) {
-        currentContents = currentContents[pathItem];
-      }
-
-      const oldValue = currentContents[key];
-      currentContents[key] = value;
-      if (!isValid(currentContents, false)) {
-        currentContents[key] = oldValue;
-        return false;
-      }
-      currentContents = sortRecursively(currentContents);
-
-      this.#writeToFile(directory);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  #writeToFile(directory) {
-    const dataString = JSON.stringify(this.#data);
-    const fileData = encryptData(dataString, this.#password);
-    const filePath = path.join(directory, this.#VAULT_FILE);
-
-    fs.writeFileSync(filePath, fileData);
   }
 }
 
-module.exports = { Vault };
+module.exports = { Vault, VaultWriteError, VaultReadError, VaultDataError };

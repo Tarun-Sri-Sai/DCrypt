@@ -6,9 +6,8 @@ const {
   REACT_INDEX_PATH,
 } = require("./electron/constants.js");
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { Vault } = require("./electron/vault.js");
 
-global.share = { ipcMain, mainWindow: null, vault: new Vault() };
+global.share = { ipcMain, mainWindow: null, vault: null };
 
 require("./electron/handlers.js");
 

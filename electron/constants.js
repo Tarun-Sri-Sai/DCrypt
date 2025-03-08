@@ -9,4 +9,5 @@ module.exports = {
   REACT_INDEX_PATH: path.join(__dirname, "..", "dist", "index.html"),
   REACT_DEV_URL: "http://localhost:5173",
   EXPORT_FILE_PREFIX: "dcryptexport",
+  VAULT_DIRECTORY: "dcryptvault",
 };
