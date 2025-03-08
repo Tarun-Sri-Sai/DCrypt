@@ -15,8 +15,8 @@ module.exports = {
     return result.filePaths[0];
   }),
 
-  setPassword: global.share.ipcMain.handle(
-    "set-password",
+  initVault: global.share.ipcMain.handle(
+    "init-vault",
     async (_, directory, password) => {
       global.share.ipcMain.vault = Vault(directory, password);
     },
@@ -24,8 +24,8 @@ module.exports = {
 
   writeVault: global.share.ipcMain.handle(
     "write-vault",
-    async (_, directory, pathArray, key, value) =>
-      global.share.vault.write(directory, pathArray, key, value),
+    async (_, pathArray, contents) =>
+      global.share.vault.write(pathArray, contents),
   ),
 
   readVault: global.share.ipcMain.handle("read-vault", async (_, pathArray) =>
