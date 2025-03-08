@@ -1,5 +1,6 @@
 const { dialog } = require("electron");
 const { Vault } = require("./vault");
+const { UserCanceledError } = require("./utils/errors");
 
 module.exports = {
   selectDirectory: global.share.ipcMain.handle("select-directory", async () => {
@@ -8,7 +9,7 @@ module.exports = {
     });
 
     if (result.canceled) {
-      throw new Error("Operation canceled");
+      throw new UserCanceledError("Operation canceled");
     }
 
     return result.filePaths[0];
@@ -60,7 +61,11 @@ module.exports = {
         options,
       );
 
-      return !result.canceled && result.response === 0;
+      if (result.canceled) {
+        throw new UserCanceledError("Operation canceled");
+      }
+
+      return result.response === 0;
     },
   ),
 };

@@ -2,28 +2,12 @@ const fs = require("fs");
 const path = require("path");
 const { decryptData, encryptData } = require("./utils/encryption");
 const { isValidPassword } = require("./utils/validation");
-const { VAULT_DIRECTORY } = require("./constants");
-
-class VaultReadError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "VaultReadError";
-  }
-}
-
-class VaultWriteError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "VaultWriteError";
-  }
-}
-
-class VaultDataError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "VaultDataError";
-  }
-}
+const { VAULT_DIRECTORY } = require("./utils/constants");
+const {
+  VaultDataError,
+  VaultReadError,
+  VaultWriteError,
+} = require("./utils/errors");
 
 class Vault {
   #password = "";
@@ -34,8 +18,13 @@ class Vault {
       throw new VaultDataError("Password is too weak.");
     }
 
-    if (!fs.existsSync(parentDirectory) || !fs.statSync(parentDirectory).isDirectory()) {
-      throw new VaultDataError(`'${parentDirectory}' is not a valid directory.`);
+    if (
+      !fs.existsSync(parentDirectory) ||
+      !fs.statSync(parentDirectory).isDirectory()
+    ) {
+      throw new VaultDataError(
+        `'${parentDirectory}' is not a valid directory.`,
+      );
     }
 
     this.#password = password;
@@ -75,7 +64,7 @@ class Vault {
   }
 
   write(relativePath = [], contents) {
-    const itemPath = path.join(this.#directory, relativePath);
+    const itemPath = path.join(this.#directory, ...relativePath);
 
     const parentPath = path.dirname(itemPath);
     if (!fs.existsSync(parentPath)) {
@@ -83,7 +72,7 @@ class Vault {
     }
 
     if (!fs.statSync(parentPath).isDirectory()) {
-      throw new VaultWriteError(`'${parentPath}' is not a directory.`)
+      throw new VaultWriteError(`'${parentPath}' is not a directory.`);
     }
 
     try {
@@ -96,4 +85,4 @@ class Vault {
   }
 }
 
-module.exports = { Vault, VaultWriteError, VaultReadError, VaultDataError };
+module.exports = { Vault };

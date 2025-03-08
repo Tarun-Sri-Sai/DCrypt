@@ -10,4 +10,5 @@ module.exports = {
   REACT_DEV_URL: "http://localhost:5173",
   EXPORT_FILE_PREFIX: "dcryptexport",
   VAULT_DIRECTORY: "dcryptvault",
+  MIN_PASSWORD_LENGTH: 8,
 };
