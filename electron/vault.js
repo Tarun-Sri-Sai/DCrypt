@@ -4,11 +4,26 @@ const { decryptData, encryptData } = require("./utils/encryption");
 const { isValidPassword } = require("./utils/validation");
 const { VAULT_DIRECTORY } = require("./constants");
 
-class VaultReadError extends Error {}
+class VaultReadError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "VaultReadError";
+  }
+}
 
-class VaultWriteError extends Error {}
+class VaultWriteError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "VaultWriteError";
+  }
+}
 
-class VaultDataError extends Error {}
+class VaultDataError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "VaultDataError";
+  }
+}
 
 class Vault {
   #password = "";
@@ -19,8 +34,8 @@ class Vault {
       throw new VaultDataError("Password is too weak.");
     }
 
-    if (!fs.statSync(parentDirectory).isDirectory()) {
-      throw new VaultDataError(`${parentDirectory} is not a valid directory.`);
+    if (!fs.existsSync(parentDirectory) || !fs.statSync(parentDirectory).isDirectory()) {
+      throw new VaultDataError(`'${parentDirectory}' is not a valid directory.`);
     }
 
     this.#password = password;
@@ -29,9 +44,10 @@ class Vault {
 
   read(relativePath = []) {
     const itemPath = path.join(this.#directory, ...relativePath);
-    const itemStat = fs.statSync(itemPath);
 
     try {
+      const itemStat = fs.statSync(itemPath);
+
       if (itemStat.isFile()) {
         const fileData = fs.readFileSync(itemPath, { encoding: "utf-8" });
         const decrypted = decryptData(fileData, this.#password);
@@ -55,15 +71,19 @@ class Vault {
       throw new VaultReadError(err);
     }
 
-    throw new VaultReadError(`${itemPath} is not a valid path.`);
+    throw new VaultReadError(`'${itemPath}' is not a valid path.`);
   }
 
   write(relativePath = [], contents) {
     const itemPath = path.join(this.#directory, relativePath);
 
     const parentPath = path.dirname(itemPath);
-    if (!fs.statSync(parentPath).isDirectory()) {
+    if (!fs.existsSync(parentPath)) {
       fs.mkdirSync(parentPath, { recursive: true });
+    }
+
+    if (!fs.statSync(parentPath).isDirectory()) {
+      throw new VaultWriteError(`'${parentPath}' is not a directory.`)
     }
 
     try {
