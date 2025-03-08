@@ -12,7 +12,7 @@ const Signup = () => {
     const checkVault = async () => {
       const directory = localStorage.getItem(DIRECTORY_KEY);
       if (directory === null) {
-        navigate("/vault-location");
+        navigate("/get-started");
         return;
       }
 

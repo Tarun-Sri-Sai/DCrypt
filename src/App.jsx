@@ -1,7 +1,7 @@
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import Error from "./components/Error";
 import Loader from "./components/Loader";
-import VaultLocation from "./pages/VaultLocation";
+import GetStarted from "./pages/GetStarted";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Signup from "./pages/Signup";
@@ -17,12 +17,12 @@ const router = createHashRouter([
         index: true,
         element:
           localStorage.getItem(DIRECTORY_KEY) === null ? (
-            <VaultLocation />
+            <GetStarted />
           ) : (
             <Signup />
           ),
       },
-      { path: "/vault-location", element: <VaultLocation /> },
+      { path: "/get-started", element: <GetStarted /> },
       { path: "/login", element: <Login /> },
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/signup", element: <Signup /> },

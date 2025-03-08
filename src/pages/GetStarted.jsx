@@ -3,7 +3,7 @@ import Loader from "../components/Loader";
 import { Navigate } from "react-router-dom";
 import { DIRECTORY_KEY } from "../constants";
 
-const VaultLocation = () => {
+const GetStarted = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -38,4 +38,4 @@ const VaultLocation = () => {
   );
 };
 
-export default VaultLocation;
+export default GetStarted;
