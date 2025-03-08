@@ -1,40 +1,41 @@
 {
-  "name": "dcrypt",
-  "version": "2.1.0",
-  "private": true,
-  "main": "main.js",
-  "homepage": ".",
-  "dependencies": {
-    "cross-env": "^7.0.3",
-    "prettier": "^3.4.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.3.0",
-    "react-router-dom": "^6.26.1"
-  },
-  "scripts": {
-    "react-watch": "vite",
-    "react": "vite build",
-    "electron-watch": "cross-env NODE_ENV=development nodemon",
-    "electron": "cross-env NODE_ENV=production electron-packager . DCrypt --platform=win32 --arch=x64 --out=build --icon=assets/icon.ico --ignore=src --ignore=node_modules",
-    "format": "prettier --write ."
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.13.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.20",
-    "electron": "^32.0.1",
-    "electron-packager": "^17.1.2",
-    "eslint": "^9.13.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.11.0",
-    "nodemon": "^3.1.4",
-    "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.10",
-    "vite": "^5.4.10"
+    "name": "dcrypt",
+    "version": "2.1.0",
+    "private": true,
+    "main": "main.js",
+    "homepage": ".",
+    "dependencies": {
+      "cross-env": "^7.0.3",
+      "prettier": "^3.4.2",
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1",
+      "react-icons": "^5.3.0",
+      "react-router-dom": "^6.26.1"
+    },
+    "scripts": {
+      "react-watch": "vite",
+      "react": "vite build",
+      "electron-watch": "cross-env NODE_ENV=development nodemon",
+      "electron": "cross-env NODE_ENV=production electron-packager . DCrypt --out=build --icon=assets/icon.ico --ignore=src --ignore=node_modules",
+      "format": "prettier --write ."
+    },
+    "devDependencies": {
+      "@eslint/js": "^9.13.0",
+      "@types/react": "^18.3.12",
+      "@types/react-dom": "^18.3.1",
+      "@vitejs/plugin-react": "^4.3.3",
+      "autoprefixer": "^10.4.20",
+      "electron": "^32.0.1",
+      "electron-packager": "^17.1.2",
+      "eslint": "^9.13.0",
+      "eslint-plugin-react": "^7.37.2",
+      "eslint-plugin-react-hooks": "^5.0.0",
+      "eslint-plugin-react-refresh": "^0.4.14",
+      "globals": "^15.11.0",
+      "nodemon": "^3.1.4",
+      "postcss": "^8.4.41",
+      "tailwindcss": "^3.4.10",
+      "vite": "^5.4.10"
+    }
   }
-}
+  
