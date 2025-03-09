@@ -1,4 +1,4 @@
-const { MIN_PASSWORD_LENGTH } = require("./constants");
+const { MIN_PASSWORD_LENGTH } = require("../constants");
 
 const isValidPassword = (password) => {
   const hasUpperCase = /[A-Z]/.test(password);

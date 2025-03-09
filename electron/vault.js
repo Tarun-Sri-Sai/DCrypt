@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { decryptData, encryptData } = require("./utils/encryption");
 const { isValidPassword } = require("./utils/validation");
-const { VAULT_DIRECTORY } = require("./utils/constants");
+const { VAULT_DIRECTORY } = require("./constants");
 const {
   VaultDataError,
   VaultReadError,
