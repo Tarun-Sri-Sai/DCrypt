@@ -11,7 +11,20 @@
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
-  "contributes": {},
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "dcrypt.editor",
+        "displayName": "DCrypt Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.dcrypt"
+          }
+        ],
+        "priority": "default"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
