@@ -48,5 +48,6 @@
     "type": "git",
     "url": "https://github.com/Tarun-Sri-Sai/DCrypt/tree/vscext"
   },
-  "publisher": "tarun-sri-sai"
+  "publisher": "tarun-sri-sai",
+  "icon": "assets/icon.ico"
 }
