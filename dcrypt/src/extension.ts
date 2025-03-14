@@ -4,8 +4,6 @@ import * as crypto from "crypto";
 const passwordStore = new Map<string, string>();
 
 export function activate(context: vscode.ExtensionContext) {
-  vscode.window.showInformationMessage("DCrypt extension is now active");
-
   const provider = new DCryptEditorProvider(context);
 
   context.subscriptions.push(
@@ -54,7 +52,6 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
 
     let password = passwordStore.get(uri.toString());
     if (!password) {
-      vscode.window.showInformationMessage("Asking for password"); // DEBUG
       password = await this.promptForPassword();
       if (!password) {
         webviewPanel.dispose();
@@ -74,7 +71,6 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
         passwordStore.delete(uri.toString());
-        webviewPanel.dispose();
         return;
       }
     }
