@@ -2,7 +2,7 @@
   "name": "dcrypt",
   "displayName": "DCrypt",
   "description": "Secrets editor for VSCode",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.98.0"
   },
