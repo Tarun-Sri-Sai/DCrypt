@@ -54,7 +54,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
     if (!password) {
       password = await this.promptForPassword();
       if (!password) {
-        webviewPanel.dispose();
+        vscode.window.showErrorMessage("No password was provided");
         return;
       }
       passwordStore.set(uri.toString(), password);
