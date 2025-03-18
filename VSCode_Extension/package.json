@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Tarun-Sri-Sai/DCrypt/tree/vscext"
+    "url": "https://github.com/Tarun-Sri-Sai/DCrypt/tree/main/VSCode_Extension"
   },
   "publisher": "tarun-sri-sai",
   "icon": "assets/icon.ico"
