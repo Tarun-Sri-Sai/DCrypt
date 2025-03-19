@@ -12,13 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
       supportsMultipleEditorsPerDocument: false,
     })
   );
-
-  context.subscriptions.push(
-    vscode.workspace.registerFileSystemProvider("dcrypt", new DCryptFileSystemProvider(), {
-      isCaseSensitive: true,
-      isReadonly: false,
-    })
-  );
 }
 
 export function deactivate() {
@@ -253,40 +246,4 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       delete: () => {},
     });
   }
-}
-
-class DCryptFileSystemProvider implements vscode.FileSystemProvider {
-  private _emitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
-  readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
-
-  watch(): vscode.Disposable {
-    return { dispose: () => {} };
-  }
-
-  stat(uri: vscode.Uri): vscode.FileStat {
-    return {
-      type: vscode.FileType.File,
-      ctime: Date.now(),
-      mtime: Date.now(),
-      size: 0,
-    };
-  }
-
-  readDirectory(): [string, vscode.FileType][] {
-    return [];
-  }
-
-  createDirectory(): void {}
-
-  readFile(uri: vscode.Uri): Uint8Array {
-    return new Uint8Array(0);
-  }
-
-  writeFile(uri: vscode.Uri, content: Uint8Array, options: { create: boolean; overwrite: boolean }): void {
-    this._emitter.fire([{ type: vscode.FileChangeType.Changed, uri }]);
-  }
-
-  delete(): void {}
-
-  rename(): void {}
 }
