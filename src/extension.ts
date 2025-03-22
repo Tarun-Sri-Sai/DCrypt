@@ -49,6 +49,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       password = await this.promptForPassword(path.basename(uri.toString()));
       if (!password) {
         vscode.window.showErrorMessage("No password was provided");
+        setImmediate(() => webviewPanel.dispose());
         return;
       }
       passwordStore.set(uri.toString(), password);
@@ -65,6 +66,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
         passwordStore.delete(uri.toString());
+        setImmediate(() => webviewPanel.dispose());
         return;
       }
     }
@@ -75,7 +77,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
 
     webviewPanel.webview.html = this.getWebviewContent(decryptedContent);
 
-    webviewPanel.webview.onDidReceiveMessage(async (message) => {
+    const messageListener = webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case "save":
           await this.saveFile(uri, message.text, password);
@@ -83,7 +85,9 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       }
     });
 
-    webviewPanel.onDidDispose(() => {});
+    webviewPanel.onDidDispose(() => {
+      messageListener.dispose();
+    });
   }
 
   private async promptForPassword(fileName: string): Promise<string | undefined> {
