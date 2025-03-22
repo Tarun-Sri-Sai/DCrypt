@@ -118,8 +118,6 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       const fileContent = `${ivBase64}:${encryptedContent}`;
 
       await vscode.workspace.fs.writeFile(uri, Buffer.from(fileContent, "utf-8"));
-
-      vscode.window.showInformationMessage("File encrypted and saved");
     } catch (error: any) {
       vscode.window.showErrorMessage(`Failed to save encrypted file: ${error.message}`);
     }
