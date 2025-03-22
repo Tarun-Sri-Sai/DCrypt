@@ -5,7 +5,7 @@ import path from "path";
 const passwordStore = new Map<string, string>();
 
 export function activate(context: vscode.ExtensionContext) {
-  const provider = new DCryptEditorProvider(context);
+  const provider = new DCryptEditorProvider();
 
   context.subscriptions.push(
     vscode.window.registerCustomEditorProvider("dcrypt.editor", provider, {
@@ -22,16 +22,13 @@ export function deactivate() {
 class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomDocument> {
   public readonly onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<vscode.CustomDocument>> =
     new vscode.EventEmitter<vscode.CustomDocumentEditEvent<vscode.CustomDocument>>().event;
-  private readonly context: vscode.ExtensionContext;
 
-  constructor(context: vscode.ExtensionContext) {
-    this.context = context;
-  }
+  constructor() {}
 
   async openCustomDocument(
     uri: vscode.Uri,
-    openContext: vscode.CustomDocumentOpenContext,
-    token: vscode.CancellationToken
+    _openContext: vscode.CustomDocumentOpenContext,
+    _token: vscode.CancellationToken
   ): Promise<vscode.CustomDocument> {
     return { uri, dispose: () => {} };
   }
@@ -39,7 +36,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
   async resolveCustomEditor(
     document: vscode.CustomDocument,
     webviewPanel: vscode.WebviewPanel,
-    token: vscode.CancellationToken
+    _token: vscode.CancellationToken
   ): Promise<void> {
     const uri = document.uri;
     const fileContent = await this.readFile(uri);
@@ -207,26 +204,26 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
         `;
   }
 
-  public saveCustomDocument(document: vscode.CustomDocument, cancellation: vscode.CancellationToken): Promise<void> {
+  public saveCustomDocument(_document: vscode.CustomDocument, _cancellation: vscode.CancellationToken): Promise<void> {
     return Promise.resolve();
   }
 
   public saveCustomDocumentAs(
-    document: vscode.CustomDocument,
-    destination: vscode.Uri,
-    cancellation: vscode.CancellationToken
+    _document: vscode.CustomDocument,
+    _destination: vscode.Uri,
+    _cancellation: vscode.CancellationToken
   ): Promise<void> {
     return Promise.resolve();
   }
 
-  public revertCustomDocument(document: vscode.CustomDocument, cancellation: vscode.CancellationToken): Promise<void> {
+  public revertCustomDocument(_document: vscode.CustomDocument, _cancellation: vscode.CancellationToken): Promise<void> {
     return Promise.resolve();
   }
 
   public backupCustomDocument(
-    document: vscode.CustomDocument,
+    _document: vscode.CustomDocument,
     context: vscode.CustomDocumentBackupContext,
-    cancellation: vscode.CancellationToken
+    _cancellation: vscode.CancellationToken
   ): Promise<vscode.CustomDocumentBackup> {
     return Promise.resolve({
       id: context.destination.toString(),
