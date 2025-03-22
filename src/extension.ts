@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as util from "./util";
+import path from "path";
 
 const passwordStore = new Map<string, string>();
 
@@ -45,7 +46,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
 
     let password = passwordStore.get(uri.toString());
     if (!password) {
-      password = await this.promptForPassword();
+      password = await this.promptForPassword(path.basename(uri.toString()));
       if (!password) {
         vscode.window.showErrorMessage("No password was provided");
         return;
@@ -85,10 +86,10 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
     webviewPanel.onDidDispose(() => {});
   }
 
-  private async promptForPassword(): Promise<string | undefined> {
+  private async promptForPassword(fileName: string): Promise<string | undefined> {
     return vscode.window.showInputBox({
       title: "DCrypt File",
-      prompt: "Enter password to encrypt/decrypt this file",
+      prompt: `Enter password for ${fileName}`,
       password: true,
       ignoreFocusOut: true,
     });
