@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as crypto from "crypto";
+import * as util from "./util";
 
 const passwordStore = new Map<string, string>();
 
@@ -59,7 +59,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
       try {
         const [ivBase64, encryptedContentBase64] = fileContent.split(":");
         if (ivBase64 && encryptedContentBase64) {
-          decryptedContent = this.decrypt(encryptedContentBase64, ivBase64, password);
+          decryptedContent = util.decrypt(encryptedContentBase64, ivBase64, password);
         }
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
@@ -105,10 +105,10 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
 
   private async saveFile(uri: vscode.Uri, content: string, password: string): Promise<void> {
     try {
-      const iv = crypto.randomBytes(16);
+      const iv = util.getRandomIv();
       const ivBase64 = iv.toString("base64");
 
-      const encryptedContent = this.encrypt(content, iv, password);
+      const encryptedContent = util.encrypt(content, iv, password);
 
       const fileContent = `${ivBase64}:${encryptedContent}`;
 
@@ -118,23 +118,6 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
     } catch (error: any) {
       vscode.window.showErrorMessage(`Failed to save encrypted file: ${error.message}`);
     }
-  }
-
-  private encrypt(text: string, iv: Buffer, password: string): string {
-    const key = crypto.scryptSync(password, "salt", 32);
-    const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
-    let encrypted = cipher.update(text, "utf8", "base64");
-    encrypted += cipher.final("base64");
-    return encrypted;
-  }
-
-  private decrypt(encryptedBase64: string, ivBase64: string, password: string): string {
-    const key = crypto.scryptSync(password, "salt", 32);
-    const iv = Buffer.from(ivBase64, "base64");
-    const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
-    let decrypted = decipher.update(encryptedBase64, "base64", "utf8");
-    decrypted += decipher.final("utf8");
-    return decrypted;
   }
 
   private getWebviewContent(initialContent: string): string {
