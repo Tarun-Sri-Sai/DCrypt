@@ -5,7 +5,7 @@ import path from "path";
 const passwordStore = new Map<string, string>();
 
 export function activate(context: vscode.ExtensionContext) {
-  const provider = new DCryptEditorProvider();
+  const provider = new DCryptEditorProvider(passwordStore);
 
   context.subscriptions.push(
     vscode.window.registerCustomEditorProvider("dcrypt.editor", provider, {
@@ -22,8 +22,11 @@ export function deactivate() {
 class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomDocument> {
   public readonly onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<vscode.CustomDocument>> =
     new vscode.EventEmitter<vscode.CustomDocumentEditEvent<vscode.CustomDocument>>().event;
+  private readonly passwordStore: Map<string, string>;
 
-  constructor() {}
+  constructor(passwordStore: Map<string, string>) {
+    this.passwordStore = passwordStore;
+  }
 
   async openCustomDocument(
     uri: vscode.Uri,
@@ -41,7 +44,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
     const uri = document.uri;
     const fileContent = await this.readFile(uri);
 
-    let password = passwordStore.get(uri.toString());
+    let password = this.passwordStore.get(uri.toString());
     if (!password) {
       password = await this.promptForPassword(path.basename(uri.toString()));
       if (!password) {
@@ -49,7 +52,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
         setImmediate(() => webviewPanel.dispose());
         return;
       }
-      passwordStore.set(uri.toString(), password);
+      this.passwordStore.set(uri.toString(), password);
     }
 
     let decryptedContent = "";
@@ -62,7 +65,7 @@ class DCryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomD
         }
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
-        passwordStore.delete(uri.toString());
+        this.passwordStore.delete(uri.toString());
         setImmediate(() => webviewPanel.dispose());
         return;
       }
