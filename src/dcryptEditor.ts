@@ -121,6 +121,8 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
                           margin: 0;
                           padding: 0;
                           overflow: hidden;
+                          background-color: var(--vscode-editor-background);
+                          color: var(--vscode-editor-foreground);
                       }
                       
                       #editor-container {
@@ -142,16 +144,29 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
                           const vscode = acquireVsCodeApi();
                           let editor = null;
                           
+                          const bgColor = getComputedStyle(document.body).getPropertyValue('--vscode-editor-background');
+                          const fgColor = getComputedStyle(document.body).getPropertyValue('--vscode-editor-foreground');
+                          
                           const loaderScript = document.createElement('script');
                           loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.js';
                           loaderScript.onload = () => {
                               require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' }});
                               
                               require(['vs/editor/editor.main'], function() {
+                                  monaco.editor.defineTheme('vscode-current', {
+                                      base: 'vs-dark',
+                                      inherit: true,
+                                      rules: [],
+                                      colors: {
+                                          'editor.background': bgColor,
+                                          'editor.foreground': fgColor
+                                      }
+                                  });
+                                  
                                   editor = monaco.editor.create(document.getElementById('editor-container'), {
                                       value: ${JSON.stringify(initialContent)},
                                       language: 'plaintext',
-                                      theme: 'vs-dark',
+                                      theme: 'vscode-current',
                                       automaticLayout: true
                                   });
                                   
