@@ -121,8 +121,6 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
                           margin: 0;
                           padding: 0;
                           overflow: hidden;
-                          background-color: var(--vscode-editor-background);
-                          color: var(--vscode-editor-foreground);
                       }
                       
                       #editor-container {
