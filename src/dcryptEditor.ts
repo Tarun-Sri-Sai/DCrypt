@@ -6,8 +6,10 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
   public readonly onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<vscode.CustomDocument>> =
     new vscode.EventEmitter<vscode.CustomDocumentEditEvent<vscode.CustomDocument>>().event;
   private readonly passwordStore: Map<string, string>;
+  private readonly context: vscode.ExtensionContext;
 
-  constructor(passwordStore: Map<string, string>) {
+  constructor(context: vscode.ExtensionContext, passwordStore: Map<string, string>) {
+    this.context = context;
     this.passwordStore = passwordStore;
   }
 
@@ -58,10 +60,16 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
       enableScripts: true,
     };
 
-    webviewPanel.webview.html = this.getWebviewContent(decryptedContent);
+    webviewPanel.webview.html = this.getWebviewContent(webviewPanel.webview);
 
     const messageListener = webviewPanel.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
+        case "ready":
+          webviewPanel.webview.postMessage({
+            command: "setContent",
+            content: decryptedContent,
+          });
+          break;
         case "save":
           await this.saveFile(uri, message.text, password);
           break;
@@ -106,101 +114,32 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
     }
   }
 
-  private getWebviewContent(initialContent: string): string {
+  private getWebviewContent(webview: vscode.Webview): string {
+    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.js"));
+    const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.css"));
+    const nonce = util.getNonce();
+
     return `
-              <!DOCTYPE html>
-              <html lang="en">
-              <head>
-                  <meta charset="UTF-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https: 'unsafe-inline';">
-                  <title>DCrypt Editor</title>
-                  <style>
-                      body, html {
-                          height: 100%;
-                          margin: 0;
-                          padding: 0;
-                          overflow: hidden;
-                      }
-                      
-                      #editor-container {
-                          height: 100vh;
-                          width: 100%;
-                      }
-                      
-                      .monaco-editor {
-                          width: 100%;
-                          height: 100%;
-                      }
-                  </style>
-              </head>
-              <body>
-                  <div id="editor-container"></div>
-                  
-                  <script>
-                      (function() {
-                          const vscode = acquireVsCodeApi();
-                          let editor = null;
-                          
-                          const bgColor = getComputedStyle(document.body).getPropertyValue('--vscode-editor-background');
-                          const fgColor = getComputedStyle(document.body).getPropertyValue('--vscode-editor-foreground');
-                          
-                          const loaderScript = document.createElement('script');
-                          loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.js';
-                          loaderScript.onload = () => {
-                              require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs' }});
-                              
-                              require(['vs/editor/editor.main'], function() {
-                                  monaco.editor.defineTheme('vscode-current', {
-                                      base: 'vs-dark',
-                                      inherit: true,
-                                      rules: [],
-                                      colors: {
-                                          'editor.background': bgColor,
-                                          'editor.foreground': fgColor
-                                      }
-                                  });
-                                  
-                                  editor = monaco.editor.create(document.getElementById('editor-container'), {
-                                      value: ${JSON.stringify(initialContent)},
-                                      language: 'plaintext',
-                                      theme: 'vscode-current',
-                                      automaticLayout: true
-                                  });
-                                  
-                                  let saveTimeout = null;
-                                  editor.onDidChangeModelContent(() => {
-                                      if (saveTimeout) {
-                                          clearTimeout(saveTimeout);
-                                      }
-                                      
-                                      saveTimeout = setTimeout(() => {
-                                          const content = editor.getValue();
-                                          vscode.postMessage({
-                                              command: 'save',
-                                              text: content
-                                          });
-                                      }, 1000);
-                                  });
-                              });
-                          };
-                          document.body.appendChild(loaderScript);
-                          
-                          window.addEventListener('message', event => {
-                              const message = event.data;
-                              switch (message.command) {
-                                  case 'setLanguage':
-                                      if (editor) {
-                                          monaco.editor.setModelLanguage(editor.getModel(), message.language);
-                                      }
-                                      break;
-                              }
-                          });
-                      }());
-                  </script>
-              </body>
-              </html>
-          `;
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
+                                                            style-src ${webview.cspSource} https: 'unsafe-inline';
+                                                            script-src 'nonce-${nonce}' https: ${webview.cspSource};
+                                                            worker-src blob:;
+                                                            font-src ${webview.cspSource} https:;">
+        <title>DCrypt Editor</title>
+        <link href="${styleUri}" rel="stylesheet">
+      </head>
+      <body>
+        <div id="editor-container"></div>
+
+        <script nonce="${nonce}" src="${scriptUri}"></script>
+      </body>
+      </html>
+    `;
   }
 
   public saveCustomDocument(_document: vscode.CustomDocument, _cancellation: vscode.CancellationToken): Promise<void> {

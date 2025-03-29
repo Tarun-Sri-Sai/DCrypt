@@ -4,7 +4,7 @@ import { DcryptEditorProvider } from "./dcryptEditor";
 const passwordStore = new Map<string, string>();
 
 export function activate(context: vscode.ExtensionContext) {
-  const provider = new DcryptEditorProvider(passwordStore);
+  const provider = new DcryptEditorProvider(context, passwordStore);
 
   context.subscriptions.push(
     vscode.window.registerCustomEditorProvider("dcrypt.editor", provider, {

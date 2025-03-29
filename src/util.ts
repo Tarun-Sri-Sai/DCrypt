@@ -20,3 +20,12 @@ export function decrypt(encryptedBase64: string, ivBase64: string, password: str
 export function getRandomIv() {
   return crypto.randomBytes(16);
 }
+
+export function getNonce() {
+  let text = "";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < 32; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
