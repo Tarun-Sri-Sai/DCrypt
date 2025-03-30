@@ -1,4 +1,4 @@
-# DCrypt v1.0.3
+# DCrypt v1.0.4
 
 DCrypt is a secrets editor extension for VS Code that offers the flexibility of plaintext files with the added security of on-the-fly encryption.
 
