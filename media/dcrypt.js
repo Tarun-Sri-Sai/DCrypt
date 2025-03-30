@@ -8,9 +8,6 @@
     const styles = getComputedStyle(document.body);
     const bgColor = styles.getPropertyValue("--vscode-editor-background");
     const fgColor = styles.getPropertyValue("--vscode-editor-foreground");
-    const lineHighlightBg = styles.getPropertyValue(
-      "--vscode-editor-lineHighlightBackground"
-    );
     const selectionBg = styles.getPropertyValue(
       "--vscode-editor-selectionBackground"
     );
@@ -62,7 +59,6 @@
           colors: {
             "editor.background": bgColor,
             "editor.foreground": fgColor,
-            "editor.lineHighlightBackground": lineHighlightBg,
             "editor.selectionBackground": selectionBg,
             "editor.selectionForeground": selectionFg,
             "editorCursor.foreground": cursorColor,
