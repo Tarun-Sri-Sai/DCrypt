@@ -2,6 +2,10 @@
 
 All notable changes to the "dcrypt" extension will be documented in this file.
 
+## [v1.0.5]
+
+- Strengthen content security policy
+
 ## [v1.0.4]
 
 - Update content security policy
