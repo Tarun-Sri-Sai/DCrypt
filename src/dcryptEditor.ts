@@ -126,10 +126,10 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
-                                                            style-src ${webview.cspSource} https: 'unsafe-inline';
-                                                            script-src 'nonce-${nonce}' https: ${webview.cspSource};
+                                                            style-src ${webview.cspSource} https://cdnjs.cloudflare.com 'unsafe-inline';
+                                                            script-src 'nonce-${nonce}' ${webview.cspSource} https://cdnjs.cloudflare.com;
                                                             worker-src blob:;
-                                                            font-src ${webview.cspSource} https:;">
+                                                            font-src ${webview.cspSource} https://cdnjs.cloudflare.com;">
         <title>DCrypt Editor</title>
         <link href="${styleUri}" rel="stylesheet">
       </head>
