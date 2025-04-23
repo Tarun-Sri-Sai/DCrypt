@@ -75,7 +75,7 @@
           document.getElementById("editor-container"),
           {
             value: initialContent,
-            language: "plaintext",
+            language: "yaml",
             theme: "vscode-current",
             automaticLayout: true,
             lineNumbers: "on",
