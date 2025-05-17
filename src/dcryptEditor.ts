@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as util from "./util";
 import path from "path";
+import os from "os";
 
 export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomDocument> {
   public readonly onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<vscode.CustomDocument>> =
@@ -29,15 +30,16 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
     const uri = document.uri;
     const fileContent = await this.readFile(uri);
 
-    let password = this.passwordStore.get(uri.toString());
+    const userDirectory = os.homedir(); // Use the user directory as the key for mapping password
+    let password = this.passwordStore.get(userDirectory);
     if (!password) {
-      password = await this.promptForPassword(path.basename(uri.toString()));
+      password = await this.promptForPassword(path.basename(userDirectory));
       if (!password) {
         vscode.window.showErrorMessage("No password was provided");
         setImmediate(() => webviewPanel.dispose());
         return;
       }
-      this.passwordStore.set(uri.toString(), password);
+      this.passwordStore.set(userDirectory, password);
     }
 
     let decryptedContent = "";
@@ -50,7 +52,7 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
         }
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
-        this.passwordStore.delete(uri.toString());
+        this.passwordStore.delete(userDirectory);
         setImmediate(() => webviewPanel.dispose());
         return;
       }
