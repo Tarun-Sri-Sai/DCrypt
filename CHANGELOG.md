@@ -2,6 +2,11 @@
 
 All notable changes to the "dcrypt" extension will be documented in this file.
 
+## [v2.0.0]
+
+- Second Major Release
+- BREAKING CHANGE: Uses one password for the logged in user
+
 ## [v1.0.7]
 
 - Set plaintext as the default language mode
