@@ -3,13 +3,21 @@ import * as util from "./util";
 import path from "path";
 import os from "os";
 
-export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.CustomDocument> {
-  public readonly onDidChangeCustomDocument: vscode.Event<vscode.CustomDocumentEditEvent<vscode.CustomDocument>> =
-    new vscode.EventEmitter<vscode.CustomDocumentEditEvent<vscode.CustomDocument>>().event;
+export class DcryptEditorProvider
+  implements vscode.CustomEditorProvider<vscode.CustomDocument>
+{
+  public readonly onDidChangeCustomDocument: vscode.Event<
+    vscode.CustomDocumentEditEvent<vscode.CustomDocument>
+  > = new vscode.EventEmitter<
+    vscode.CustomDocumentEditEvent<vscode.CustomDocument>
+  >().event;
   private readonly passwordStore: Map<string, string>;
   private readonly context: vscode.ExtensionContext;
 
-  constructor(context: vscode.ExtensionContext, passwordStore: Map<string, string>) {
+  constructor(
+    context: vscode.ExtensionContext,
+    passwordStore: Map<string, string>,
+  ) {
     this.context = context;
     this.passwordStore = passwordStore;
   }
@@ -17,7 +25,7 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
   async openCustomDocument(
     uri: vscode.Uri,
     _openContext: vscode.CustomDocumentOpenContext,
-    _token: vscode.CancellationToken
+    _token: vscode.CancellationToken,
   ): Promise<vscode.CustomDocument> {
     return { uri, dispose: () => {} };
   }
@@ -25,7 +33,7 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
   async resolveCustomEditor(
     document: vscode.CustomDocument,
     webviewPanel: vscode.WebviewPanel,
-    _token: vscode.CancellationToken
+    _token: vscode.CancellationToken,
   ): Promise<void> {
     const uri = document.uri;
     const fileContent = await this.readFile(uri);
@@ -48,7 +56,11 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
       try {
         const [ivBase64, encryptedContentBase64] = fileContent.split(":");
         if (ivBase64 && encryptedContentBase64) {
-          decryptedContent = util.decrypt(encryptedContentBase64, ivBase64, password);
+          decryptedContent = util.decrypt(
+            encryptedContentBase64,
+            ivBase64,
+            password,
+          );
         }
       } catch (error: any) {
         vscode.window.showErrorMessage("Failed to decrypt file");
@@ -64,26 +76,30 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
 
     webviewPanel.webview.html = this.getWebviewContent(webviewPanel.webview);
 
-    const messageListener = webviewPanel.webview.onDidReceiveMessage(async (message) => {
-      switch (message.command) {
-        case "ready":
-          webviewPanel.webview.postMessage({
-            command: "setContent",
-            content: decryptedContent,
-          });
-          break;
-        case "save":
-          await this.saveFile(uri, message.text, password);
-          break;
-      }
-    });
+    const messageListener = webviewPanel.webview.onDidReceiveMessage(
+      async (message) => {
+        switch (message.command) {
+          case "ready":
+            webviewPanel.webview.postMessage({
+              command: "setContent",
+              content: decryptedContent,
+            });
+            break;
+          case "save":
+            await this.saveFile(uri, message.text, password);
+            break;
+        }
+      },
+    );
 
     webviewPanel.onDidDispose(() => {
       messageListener.dispose();
     });
   }
 
-  private async promptForPassword(fileName: string): Promise<string | undefined> {
+  private async promptForPassword(
+    fileName: string,
+  ): Promise<string | undefined> {
     return vscode.window.showInputBox({
       title: "DCrypt File",
       prompt: `Enter password for ${fileName}`,
@@ -101,7 +117,11 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
     }
   }
 
-  private async saveFile(uri: vscode.Uri, content: string, password: string): Promise<void> {
+  private async saveFile(
+    uri: vscode.Uri,
+    content: string,
+    password: string,
+  ): Promise<void> {
     try {
       const iv = util.getRandomIv();
       const ivBase64 = iv.toString("base64");
@@ -110,15 +130,24 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
 
       const fileContent = `${ivBase64}:${encryptedContent}`;
 
-      await vscode.workspace.fs.writeFile(uri, Buffer.from(fileContent, "utf-8"));
+      await vscode.workspace.fs.writeFile(
+        uri,
+        Buffer.from(fileContent, "utf-8"),
+      );
     } catch (error: any) {
-      vscode.window.showErrorMessage(`Failed to save encrypted file: ${error.message}`);
+      vscode.window.showErrorMessage(
+        `Failed to save encrypted file: ${error.message}`,
+      );
     }
   }
 
   private getWebviewContent(webview: vscode.Webview): string {
-    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.js"));
-    const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.css"));
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.js"),
+    );
+    const styleUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.css"),
+    );
     const nonce = util.getNonce();
 
     return `
@@ -144,21 +173,24 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
     `;
   }
 
-  public saveCustomDocument(_document: vscode.CustomDocument, _cancellation: vscode.CancellationToken): Promise<void> {
+  public saveCustomDocument(
+    _document: vscode.CustomDocument,
+    _cancellation: vscode.CancellationToken,
+  ): Promise<void> {
     return Promise.resolve();
   }
 
   public saveCustomDocumentAs(
     _document: vscode.CustomDocument,
     _destination: vscode.Uri,
-    _cancellation: vscode.CancellationToken
+    _cancellation: vscode.CancellationToken,
   ): Promise<void> {
     return Promise.resolve();
   }
 
   public revertCustomDocument(
     _document: vscode.CustomDocument,
-    _cancellation: vscode.CancellationToken
+    _cancellation: vscode.CancellationToken,
   ): Promise<void> {
     return Promise.resolve();
   }
@@ -166,7 +198,7 @@ export class DcryptEditorProvider implements vscode.CustomEditorProvider<vscode.
   public backupCustomDocument(
     _document: vscode.CustomDocument,
     context: vscode.CustomDocumentBackupContext,
-    _cancellation: vscode.CancellationToken
+    _cancellation: vscode.CancellationToken,
   ): Promise<vscode.CustomDocumentBackup> {
     return Promise.resolve({
       id: context.destination.toString(),

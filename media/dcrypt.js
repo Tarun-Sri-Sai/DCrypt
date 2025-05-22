@@ -9,36 +9,36 @@
     const bgColor = styles.getPropertyValue("--vscode-editor-background");
     const fgColor = styles.getPropertyValue("--vscode-editor-foreground");
     const selectionBg = styles.getPropertyValue(
-      "--vscode-editor-selectionBackground"
+      "--vscode-editor-selectionBackground",
     );
     const selectionFg = styles.getPropertyValue(
-      "--vscode-editor-selectionForeground"
+      "--vscode-editor-selectionForeground",
     );
     const cursorColor = styles.getPropertyValue(
-      "--vscode-editorCursor-foreground"
+      "--vscode-editorCursor-foreground",
     );
     const lineNumbersFg = styles.getPropertyValue(
-      "--vscode-editorLineNumber-foreground"
+      "--vscode-editorLineNumber-foreground",
     );
     const lineNumbersActiveFg = styles.getPropertyValue(
-      "--vscode-editorLineNumber-activeForeground"
+      "--vscode-editorLineNumber-activeForeground",
     );
     const widgetBg = styles.getPropertyValue(
-      "--vscode-editorWidget-background"
+      "--vscode-editorWidget-background",
     );
     const widgetBorder = styles.getPropertyValue(
-      "--vscode-editorWidget-border"
+      "--vscode-editorWidget-border",
     );
     const linkColor = styles.getPropertyValue("--vscode-textLink-foreground");
     const linkActiveFg = styles.getPropertyValue(
-      "--vscode-textLink-activeForeground"
+      "--vscode-textLink-activeForeground",
     );
 
     const fontFamily = styles.getPropertyValue("--vscode-editor-font-family");
     const fontSize = styles.getPropertyValue("--vscode-editor-font-size");
     const fontWeight = styles.getPropertyValue("--vscode-editor-font-weight");
     const letterSpacing = styles.getPropertyValue(
-      "--vscode-editor-font-letterSpacing"
+      "--vscode-editor-font-letterSpacing",
     );
 
     const loaderScript = document.createElement("script");
@@ -92,10 +92,10 @@
             letterSpacing: parseFloat(letterSpacing) || 0,
             lineHeight:
               parseInt(
-                styles.getPropertyValue("--vscode-editor-line-height")
+                styles.getPropertyValue("--vscode-editor-line-height"),
               ) || 18,
             wordWrap: "on",
-          }
+          },
         );
 
         let saveTimeout = null;

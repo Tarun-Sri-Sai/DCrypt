@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.registerCustomEditorProvider("dcrypt.editor", provider, {
       webviewOptions: { retainContextWhenHidden: true },
       supportsMultipleEditorsPerDocument: false,
-    })
+    }),
   );
 }
 
