@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { DcryptEditorProvider } from "./dcryptEditor";
+import { DcryptEditorProvider } from "./dcryptEditor.js";
 
-const passwordStore = new Map<string, string>();
+const passwordStore = new Map<string, string[]>();
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new DcryptEditorProvider(context, passwordStore);

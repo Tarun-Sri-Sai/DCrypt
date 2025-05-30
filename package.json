@@ -1,7 +1,7 @@
 {
   "name": "dcrypt",
-  "displayName": "DCrypt",
-  "description": "Secrets editor for VSCode",
+  "displayName": "DCrypt - OpenPGP Editor",
+  "description": "In-memory OpenPGP Editor for VSCode",
   "version": "2.0.0",
   "engines": {
     "vscode": "^1.98.0"
@@ -18,12 +18,22 @@
         "displayName": "DCrypt Editor",
         "selector": [
           {
-            "filenamePattern": "*.dcrypt"
+            "filenamePattern": "*.pgp"
           }
         ],
         "priority": "default"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "DCrypt",
+      "properties": {
+        "dcrypt.askPasswordForFile": {
+          "type": "boolean",
+          "default": false,
+          "description": "If enabled, the extension will prompt for a password when opening any .pgp file for the first time. If disabled, it will ask for one password for the user's session (which is just the name of your home directory)."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -35,6 +45,7 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "@openpgp/web-stream-tools": "^0.1.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/vscode": "^1.98.0",
@@ -51,5 +62,9 @@
     "url": "https://github.com/Tarun-Sri-Sai/DCrypt"
   },
   "publisher": "tarun-sri-sai",
-  "icon": "assets/icon.ico"
+  "icon": "assets/icon.ico",
+  "dependencies": {
+    "openpgp": "^6.1.1"
+  },
+  "type": "module"
 }
