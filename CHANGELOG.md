@@ -2,6 +2,12 @@
 
 All notable changes to the "dcrypt" extension will be documented in this file.
 
+## [v3.0.0]
+
+- Third Major Release
+- BREAKING CHANGE: Supports OpenPGP encryption.
+- Adds `dcrypt.askPasswordForFile` setting to choose between one password per session or one password per file.
+
 ## [v2.0.0]
 
 - Second Major Release
