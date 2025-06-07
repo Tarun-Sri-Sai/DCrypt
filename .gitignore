@@ -1,4 +1,9 @@
-node_modules/
-dist/
-out/
+# Ignore node modules directory
+node_modules
+
+# Ignore build directories
+dist
+out
+
+# Ignore packaged files
 *.vsix
