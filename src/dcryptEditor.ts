@@ -2,14 +2,9 @@ import * as vscode from "vscode";
 import * as util from "./util.js";
 import * as openpgp from "openpgp";
 
-export class DcryptEditorProvider
-  implements vscode.CustomEditorProvider<vscode.CustomDocument>
+export class DcryptTextEditorProvider
+  implements vscode.CustomTextEditorProvider
 {
-  public readonly onDidChangeCustomDocument: vscode.Event<
-    vscode.CustomDocumentEditEvent<vscode.CustomDocument>
-  > = new vscode.EventEmitter<
-    vscode.CustomDocumentEditEvent<vscode.CustomDocument>
-  >().event;
   private readonly passwordStore: Map<string, string[]>;
   private readonly context: vscode.ExtensionContext;
 
@@ -21,22 +16,13 @@ export class DcryptEditorProvider
     this.passwordStore = passwordStore;
   }
 
-  async openCustomDocument(
-    uri: vscode.Uri,
-    _openContext: vscode.CustomDocumentOpenContext,
-    _token: vscode.CancellationToken,
-  ): Promise<vscode.CustomDocument> {
-    return { uri, dispose: () => {} };
-  }
-
-  async resolveCustomEditor(
-    document: vscode.CustomDocument,
+  async resolveCustomTextEditor(
+    document: vscode.TextDocument,
     webviewPanel: vscode.WebviewPanel,
     _token: vscode.CancellationToken,
   ): Promise<void> {
     const uri = document.uri;
-    const fileContent = await vscode.workspace.fs.readFile(uri);
-
+    const fileContent = document.getText();
     const [passwordStoreKey, displayName] = util.getPasswordKey(uri);
     let passwords = this.passwordStore.get(passwordStoreKey) ?? [""];
     if (!passwords[0]) {
@@ -55,7 +41,9 @@ export class DcryptEditorProvider
       try {
         decryptedContent = (
           await openpgp.decrypt({
-            message: await openpgp.readMessage({ binaryMessage: fileContent }),
+            message: await openpgp.readMessage({
+              binaryMessage: Buffer.from(fileContent, "utf8"),
+            }),
             passwords,
             format: "utf8",
           })
@@ -84,7 +72,7 @@ export class DcryptEditorProvider
             });
             break;
           case "save":
-            await this.saveFile(uri, message.text, passwords);
+            await this.saveFile(uri, message.text, passwords, document.lineCount);
             break;
         }
       },
@@ -110,15 +98,21 @@ export class DcryptEditorProvider
     uri: vscode.Uri,
     text: string,
     passwords: string[],
+    lineCount: number
   ): Promise<void> {
     try {
-      const fileContent = await openpgp.encrypt({
-        message: await openpgp.createMessage({ text }),
+      const encrypted = await openpgp.encrypt({
+        message: await openpgp.createMessage({ text: text as string }),
         passwords,
-        format: "binary",
       });
 
-      await vscode.workspace.fs.writeFile(uri, fileContent);
+      const edit = new vscode.WorkspaceEdit();
+      edit.replace(
+        uri,
+        new vscode.Range(0, 0, lineCount, 0),
+        encrypted,
+      );
+      await vscode.workspace.applyEdit(edit);
     } catch (error: any) {
       vscode.window.showErrorMessage(
         `Failed to save encrypted file: ${error.message}`,
@@ -156,38 +150,5 @@ export class DcryptEditorProvider
       </body>
       </html>
     `;
-  }
-
-  public saveCustomDocument(
-    _document: vscode.CustomDocument,
-    _cancellation: vscode.CancellationToken,
-  ): Promise<void> {
-    return Promise.resolve();
-  }
-
-  public saveCustomDocumentAs(
-    _document: vscode.CustomDocument,
-    _destination: vscode.Uri,
-    _cancellation: vscode.CancellationToken,
-  ): Promise<void> {
-    return Promise.resolve();
-  }
-
-  public revertCustomDocument(
-    _document: vscode.CustomDocument,
-    _cancellation: vscode.CancellationToken,
-  ): Promise<void> {
-    return Promise.resolve();
-  }
-
-  public backupCustomDocument(
-    _document: vscode.CustomDocument,
-    context: vscode.CustomDocumentBackupContext,
-    _cancellation: vscode.CancellationToken,
-  ): Promise<vscode.CustomDocumentBackup> {
-    return Promise.resolve({
-      id: context.destination.toString(),
-      delete: () => {},
-    });
   }
 }
