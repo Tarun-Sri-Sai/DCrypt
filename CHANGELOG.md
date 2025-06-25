@@ -2,6 +2,11 @@
 
 All notable changes to the "dcrypt" extension will be documented in this file.
 
+## [v4.0.0]
+
+- Fourth Major Release
+- BREAKING CHANGE: Only supports armored format for PGP files.
+
 ## [v3.0.0]
 
 - Third Major Release
