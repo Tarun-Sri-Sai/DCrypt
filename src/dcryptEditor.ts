@@ -119,7 +119,10 @@ export class DcryptEditorProvider
         format: "armored",
       });
 
-      await vscode.workspace.fs.writeFile(uri, new TextEncoder().encode(armoredMessage));
+      await vscode.workspace.fs.writeFile(
+        uri,
+        new TextEncoder().encode(armoredMessage),
+      );
     } catch (error: any) {
       vscode.window.showErrorMessage(
         `Failed to save encrypted file: ${error.message}`,

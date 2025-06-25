@@ -19,6 +19,9 @@
         "selector": [
           {
             "filenamePattern": "*.pgp"
+          },
+          {
+            "filenamePattern": "*.asc"
           }
         ],
         "priority": "default"
@@ -30,7 +33,7 @@
         "dcrypt.askPasswordForFile": {
           "type": "boolean",
           "default": false,
-          "description": "If enabled, the extension will prompt for a password when opening any .pgp file for the first time. If disabled, it will ask for one password for the user's session (which is just the name of your home directory)."
+          "description": "If enabled, the extension will prompt for a password when opening any `.pgp` or `.asc` file for the first time. If disabled, it will ask for one password for the user's session (which is just the name of your home directory)."
         }
       }
     }
