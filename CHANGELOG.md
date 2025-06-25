@@ -2,6 +2,10 @@
 
 All notable changes to the "dcrypt" extension will be documented in this file.
 
+## [v4.1.0]
+
+- Add support for `.asc` files.
+
 ## [v4.0.0]
 
 - Fourth Major Release
