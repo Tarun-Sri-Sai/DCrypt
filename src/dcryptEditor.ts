@@ -6,19 +6,17 @@ export class DcryptTextEditorProvider
   implements vscode.CustomTextEditorProvider
 {
   private readonly passwordStore: Map<string, string[]>;
-  private readonly context: vscode.ExtensionContext;
 
   constructor(
-    context: vscode.ExtensionContext,
+    _context: vscode.ExtensionContext,
     passwordStore: Map<string, string[]>,
   ) {
-    this.context = context;
     this.passwordStore = passwordStore;
   }
 
   async resolveCustomTextEditor(
     document: vscode.TextDocument,
-    webviewPanel: vscode.WebviewPanel,
+    _webviewPanel: vscode.WebviewPanel,
     _token: vscode.CancellationToken,
   ): Promise<void> {
     const uri = document.uri;
@@ -29,57 +27,40 @@ export class DcryptTextEditorProvider
       passwords = [(await this.promptForPassword(displayName)) ?? ""];
       if (!passwords[0]) {
         vscode.window.showErrorMessage("No password was provided");
-        setImmediate(() => webviewPanel.dispose());
         return;
       }
       this.passwordStore.set(passwordStoreKey, passwords);
     }
 
-    let decryptedContent = "";
-
     if (fileContent.length > 0) {
       try {
-        decryptedContent = (
+        const decryptedContent = (
           await openpgp.decrypt({
             message: await openpgp.readMessage({
-              binaryMessage: Buffer.from(fileContent, "utf8"),
+              binaryMessage: Buffer.from(fileContent, "utf8")
             }),
             passwords,
-            format: "utf8",
+            format: "utf8"
           })
         ).data;
+
+        const edit = new vscode.WorkspaceEdit();
+        const start = new vscode.Position(0, 0);
+        const end = new vscode.Position(document.lineCount, 0);
+        edit.replace(uri, new vscode.Range(start, end), decryptedContent);
+        await vscode.workspace.applyEdit(edit);
       } catch (error: any) {
-        vscode.window.showErrorMessage("Failed to decrypt file");
+        vscode.window.showErrorMessage(`Failed to decrypt file: ${error}`);
         this.passwordStore.delete(passwordStoreKey);
-        setImmediate(() => webviewPanel.dispose());
         return;
       }
     }
 
-    webviewPanel.webview.options = {
-      enableScripts: true,
-    };
-
-    webviewPanel.webview.html = this.getWebviewContent(webviewPanel.webview);
-
-    const messageListener = webviewPanel.webview.onDidReceiveMessage(
-      async (message) => {
-        switch (message.command) {
-          case "ready":
-            webviewPanel.webview.postMessage({
-              command: "setContent",
-              content: decryptedContent,
-            });
-            break;
-          case "save":
-            await this.saveFile(uri, message.text, passwords, document.lineCount);
-            break;
-        }
-      },
-    );
-
-    webviewPanel.onDidDispose(() => {
-      messageListener.dispose();
+    vscode.workspace.onDidSaveTextDocument(async (savedDoc) => {
+      if (savedDoc.uri.toString() !== uri.toString()) {
+        return;
+      }
+      await this.saveFile(uri, savedDoc.getText(), passwords, savedDoc.lineCount);
     });
   }
 
@@ -118,37 +99,5 @@ export class DcryptTextEditorProvider
         `Failed to save encrypted file: ${error.message}`,
       );
     }
-  }
-
-  private getWebviewContent(webview: vscode.Webview): string {
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.js"),
-    );
-    const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "media", "dcrypt.css"),
-    );
-    const nonce = util.getNonce();
-
-    return `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
-                                                            style-src ${webview.cspSource} https://cdnjs.cloudflare.com 'unsafe-inline';
-                                                            script-src 'nonce-${nonce}' ${webview.cspSource} https://cdnjs.cloudflare.com;
-                                                            worker-src blob:;
-                                                            font-src ${webview.cspSource} https://cdnjs.cloudflare.com;">
-        <title>DCrypt Editor</title>
-        <link href="${styleUri}" rel="stylesheet">
-      </head>
-      <body>
-        <div id="editor-container"></div>
-
-        <script nonce="${nonce}" src="${scriptUri}"></script>
-      </body>
-      </html>
-    `;
   }
 }
