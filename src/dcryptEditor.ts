@@ -53,9 +53,10 @@ export class DcryptEditorProvider
 
     if (fileContent.length > 0) {
       try {
+        const armoredMessage = new TextDecoder().decode(fileContent);
         decryptedContent = (
           await openpgp.decrypt({
-            message: await openpgp.readMessage({ binaryMessage: fileContent }),
+            message: await openpgp.readMessage({ armoredMessage }),
             passwords,
             format: "utf8",
           })
@@ -112,13 +113,13 @@ export class DcryptEditorProvider
     passwords: string[],
   ): Promise<void> {
     try {
-      const fileContent = await openpgp.encrypt({
+      const armoredMessage = await openpgp.encrypt({
         message: await openpgp.createMessage({ text }),
         passwords,
-        format: "binary",
+        format: "armored",
       });
 
-      await vscode.workspace.fs.writeFile(uri, fileContent);
+      await vscode.workspace.fs.writeFile(uri, new TextEncoder().encode(armoredMessage));
     } catch (error: any) {
       vscode.window.showErrorMessage(
         `Failed to save encrypted file: ${error.message}`,
